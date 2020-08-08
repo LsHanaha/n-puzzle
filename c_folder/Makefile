@@ -1,4 +1,4 @@
-SRCS = a_star.c hemming.c manhattan.c
+SRCS = a_star.c hemming.c 
 
 all: lib
 	gcc $(SRCS) main.c -g -I ../libft/includes -L ../libft -lft

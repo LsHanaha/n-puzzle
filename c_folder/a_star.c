@@ -48,16 +48,21 @@ uint8_t **neighbours(uint8_t *map, uint32_t side_len)
         result[0] = cook_new_map(map, zero_id, zero_id - side_len, map_size);
     if (zero_id % (int)side_len - 1 >= 0)
         result[1] = cook_new_map(map, zero_id, zero_id - 1, map_size);
-    if (zero_id % (int)side_len + 1 <= side_len)
+    printf("%d\n", zero_id % (int)side_len + 1);
+    if (zero_id % (int)side_len + 1 < side_len)
         result[2] = cook_new_map(map, zero_id, zero_id + 1, map_size);
     if (zero_id + side_len < map_size)    
         result[3] = cook_new_map(map, zero_id, zero_id + side_len, map_size);
-    // for (int j = 0; j < 4; j++)
-    // {
-    //     if (result[j])
-    //         print_map(result[j], side_len);
-    //     printf("\n");
-    // }
+    for (int j = 0; j < 4; j++)
+    {
+        char ways[4][10] = {"top", "left", "right", "bottom"};
+        if (result[j])
+        {
+            printf("%s:\n", ways[j]);
+            print_map(result[j], side_len);
+        }
+        printf("\n");
+    }
     return result;
 }
 
@@ -79,6 +84,8 @@ uint8_t *a_star(uint8_t *map, uint8_t *goal, uint32_t side_len, double (*euristi
     double  h = 0.0;
     t_rbt   *queue = NULL;
     t_rbt   *visited = NULL;
+    uint8_t **neighb;
+
 
     printf("map:\n");
     print_map(map, side_len);
@@ -89,7 +96,14 @@ uint8_t *a_star(uint8_t *map, uint8_t *goal, uint32_t side_len, double (*euristi
     // while (euristic(map, goal, side_len))
     while(1)
     {
-        neighbours(map, side_len);
+        neighb = neighbours(map, side_len);
+        for (int i = 0; i < 4; i++)
+        {
+            if (neighb[i])
+            {
+                h = euristic(neighb[i], goal, side_len);
+            }    
+        }
         break;
     }
     
