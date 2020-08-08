@@ -7,10 +7,16 @@
 
 typedef struct s_vizited_node
 {
+	double  f;
     uint8_t *map;
     uint8_t *from;
-    double  g;
 }               t_vizited_node;
+
+typedef struct s_queue_elem
+{
+	double  f;
+    uint8_t *map;
+}              t_queue_elem;
 
 uint8_t *a_star(uint8_t *map, int side_len, double (*h)(uint8_t *map, int side_len));
 /*

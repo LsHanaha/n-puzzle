@@ -50,7 +50,7 @@ uint8_t **neighbours(uint8_t *map, int side_len)
         result[1] = cook_new_map(map, zero_id, zero_id - 1, map_size);
     if (zero_id % side_len + 1 < side_len)
         result[2] = cook_new_map(map, zero_id, zero_id + 1, map_size);
-    if (zero_id + side_len < map_size)    
+    if (zero_id + side_len < map_size)
         result[3] = cook_new_map(map, zero_id, zero_id + side_len, map_size);
     for (int j = 0; j < 4; j++)
     {
@@ -65,6 +65,21 @@ uint8_t **neighbours(uint8_t *map, int side_len)
     return result;
 }
 
+int		queue_elem_cmp(void *a, void *b)
+{
+	return (((t_queue_elem *)a)->f - ((t_queue_elem *)b)->f);
+}
+
+void	push_to_queue(t_rbt	**queue, double f, uint8_t *map)
+{
+	t_rbt	*new_node;
+
+	new_node = ft_rbtnew(0, &(t_queue_elem){f, map}, sizeof(t_queue_elem));
+	if (!new_node)
+		return ; // надо как-то просигналить об ошибке
+	ft_rbtinsertbycmp(queue, new_node, queue_elem_cmp, RBT_ADD);
+}
+
 
 uint8_t *a_star(uint8_t *map, int side_len, double (*euristic)(uint8_t *map, int side_len))
 {
@@ -75,7 +90,7 @@ uint8_t *a_star(uint8_t *map, int side_len, double (*euristic)(uint8_t *map, int
     visited = rbt
     while (h(map, goal, side_len) != 0)
     {
-        
+
     }
 
 */
@@ -84,6 +99,8 @@ uint8_t *a_star(uint8_t *map, int side_len, double (*euristic)(uint8_t *map, int
     t_rbt   *queue = NULL;
     t_rbt   *visited = NULL;
     uint8_t **neighb;
+	t_queue_elem *elem;
+	t_vizited_node	*node;
 
 
     printf("map:\n");
@@ -99,12 +116,15 @@ uint8_t *a_star(uint8_t *map, int side_len, double (*euristic)(uint8_t *map, int
             if (neighb[i])
             {
                 h = euristic(neighb[i], side_len);
+				push_to_queue(&queue, g + h, neighb[i]);
                 printf("h = %f\n", h);
-            }    
+            }
         }
+		// после всех манипуляций в корне дерева queue будет нода с наивысшим приоритетом
+		// надо push_to_visited(&visited, root_node); map = root_node; repeat loop
         break;
     }
-    
+
     return 1;
 }
 
