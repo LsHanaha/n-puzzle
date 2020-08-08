@@ -12,26 +12,54 @@ void    print_map(uint8_t *map, uint32_t side_len)
 }
 
 
-void neighbours(uint8_t *map, uint32_t side_len)
+uint8_t *cook_new_map(uint8_t *map, int zero, int new_place, int map_size)
 {
-    int zero_id = 0;
-    int x, y;
+    uint8_t temp;
+    uint8_t *new_map;
 
-    for (; zero_id < side_len * side_len; ++zero_id)
-        if (!map[zero_id])
-            break;
-    printf("zero_id = %d\n", zero_id);
-    x = zero_id / side_len;
-    y = zero_id % side_len;
+    new_map = (uint8_t *)malloc(map_size);
+    ft_memmove(new_map, map, map_size);
 
-    printf("%d  %d\n", x, y);
-    
+    temp = new_map[zero];
+    new_map[zero] = new_map[new_place];
+    new_map[new_place] = temp;
 
-            
-    // map[i][i+1]
+    return new_map;
 }
 
 
+uint8_t **neighbours(uint8_t *map, uint32_t side_len)
+{
+    /*
+        top, left, right, bottom
+    */
+    int zero_id = 0;
+    int map_size;
+    uint8_t **result;
+
+    map_size = side_len * side_len;
+    result = (uint8_t **)ft_memalloc(4 * sizeof(uint8_t *));
+
+    for (; zero_id < map_size; ++zero_id)
+        if (!map[zero_id])
+            break;
+
+    if (zero_id - side_len >= 0)
+        result[0] = cook_new_map(map, zero_id, zero_id - side_len, map_size);
+    if (zero_id % (int)side_len - 1 >= 0)
+        result[1] = cook_new_map(map, zero_id, zero_id - 1, map_size);
+    if (zero_id % (int)side_len + 1 <= side_len)
+        result[2] = cook_new_map(map, zero_id, zero_id + 1, map_size);
+    if (zero_id + side_len < map_size)    
+        result[3] = cook_new_map(map, zero_id, zero_id + side_len, map_size);
+    // for (int j = 0; j < 4; j++)
+    // {
+    //     if (result[j])
+    //         print_map(result[j], side_len);
+    //     printf("\n");
+    // }
+    return result;
+}
 
 
 uint8_t *a_star(uint8_t *map, uint8_t *goal, uint32_t side_len, double (*euristic)(uint8_t *map, uint8_t *goal, uint32_t side_len))
@@ -61,7 +89,6 @@ uint8_t *a_star(uint8_t *map, uint8_t *goal, uint32_t side_len, double (*euristi
     // while (euristic(map, goal, side_len))
     while(1)
     {
-        uint8_t neigb[] = {NULL, NULL, NULL, NULL}; 
         neighbours(map, side_len);
         break;
     }
