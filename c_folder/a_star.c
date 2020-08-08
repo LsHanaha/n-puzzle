@@ -15,13 +15,19 @@ void    print_map(uint8_t *map, uint32_t side_len)
 void neighbours(uint8_t *map, uint32_t side_len)
 {
     int zero_id = 0;
+    int x, y;
+
     for (; zero_id < side_len * side_len; ++zero_id)
         if (!map[zero_id])
             break;
     printf("zero_id = %d\n", zero_id);
+    x = zero_id / side_len;
+    y = zero_id % side_len;
 
-
+    printf("%d  %d\n", x, y);
     
+
+            
     // map[i][i+1]
 }
 
@@ -55,6 +61,7 @@ uint8_t *a_star(uint8_t *map, uint8_t *goal, uint32_t side_len, double (*euristi
     // while (euristic(map, goal, side_len))
     while(1)
     {
+        uint8_t neigb[] = {NULL, NULL, NULL, NULL}; 
         neighbours(map, side_len);
         break;
     }
