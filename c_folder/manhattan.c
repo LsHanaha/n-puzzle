@@ -12,7 +12,7 @@ struct s_point
     int y;
 };
 
-double manhattan(uint8_t *map, uint32_t side_len)
+double manhattan(uint8_t *map, int side_len)
 {
     double          out;
     struct s_point  current;
