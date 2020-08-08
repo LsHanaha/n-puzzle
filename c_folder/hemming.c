@@ -7,7 +7,7 @@
 
 #include "a_star.h"
 
-double hemming(uint8_t *map, uint8_t *goal, uint32_t side_len)
+double hemming(uint8_t *map, uint32_t side_len)
 {
     double  out;
 
