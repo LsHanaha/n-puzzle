@@ -1,1 +1,6 @@
 *.DS_Store
+*.o
+a.out
+*.a
+libft/libft_regex/libft_regex.index
+.vscode/launch.json
