@@ -1,5 +1,5 @@
 all: lib
-	gcc *.c -I ../libft/includes -L ../libft -lft
+	gcc *.c -g -I ../libft/includes -L ../libft -lft
 
 lib:
 	make -C ../libft
