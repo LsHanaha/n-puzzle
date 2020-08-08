@@ -279,6 +279,7 @@ int				ft_rbtisleft(t_rbt *node);
 int				ft_rbtisvalid(t_rbt *root);
 t_rbt			*ft_rbtmin(t_rbt *root);
 t_rbt			*ft_rbtnew(int id, void const *content, size_t size);
+t_rbt			*ft_rbtnewlink(int id, void const *content, size_t size);
 void			ft_rbtrm(t_rbt **root, t_rbt *to_delete,
 		void (*del)(void **, size_t *));
 void			ft_rbtrmbyid(t_rbt **root, int id,
