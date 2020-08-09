@@ -13,7 +13,7 @@ def _cook_new_map(current: Puzzle, zero_id:int, new_id:int) -> Puzzle:
 def get_neighbours(current: Puzzle) -> List[Puzzle]:
     side_len = current.side_len
     result = []
-    zero_id = current.index(0)
+    zero_id = current.index(len(current) - 1)
 
     if zero_id - side_len >= 0:
         result.append(_cook_new_map(current, zero_id, zero_id - side_len))
