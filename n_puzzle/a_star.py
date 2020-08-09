@@ -6,7 +6,7 @@ from typing import Callable, List
 
 
 def a_star(puzzle: Puzzle, euristic: Callable[[List[int]], int]):
-    priority_q = heapq()
+    # priority_q =
     visited = set()
 
     current_configuration = puzzle
@@ -17,3 +17,5 @@ def a_star(puzzle: Puzzle, euristic: Callable[[List[int]], int]):
             heapq.heappush(priority_q, queue_elem)
         f, current_g, current_configuration = heapq.heappop(priority_q)
         visited.add(hash(current_configuration))
+
+a_star('zzz', 'zzz')

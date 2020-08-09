@@ -23,3 +23,25 @@ class Puzzle(list):
     @property
     def f(self):
         return self.g + self.h
+
+    def __repr__(self):
+        return f"||parent = {self.parent}, sum = {self.f}||"
+
+
+if __name__ == '__main__':
+    import heapq
+    import random
+
+    queue = []
+    heapq.heapify(queue)
+
+    for i in range(40):
+        new_obj = Puzzle(g=random.randint(1, 1000), h=random.randint(1, 1000), parent=str(i))
+        heapq.heappush(queue, new_obj)
+
+    for i in range(40):
+        print(heapq.heappop(queue))
+
+
+
+
