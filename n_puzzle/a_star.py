@@ -1,5 +1,5 @@
-from Puzzle import Puzzle
-from get_neighbours import get_neighbours
+from .Puzzle import Puzzle
+from .get_neighbours import get_neighbours
 
 import heapq
 from typing import Callable, List
