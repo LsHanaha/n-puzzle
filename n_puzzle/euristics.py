@@ -1,4 +1,4 @@
-from .Puzzle import Puzzle
+from Puzzle import Puzzle
 
 
 def hemming(puzzle: Puzzle) -> int:

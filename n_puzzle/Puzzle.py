@@ -26,8 +26,8 @@ class Puzzle(list):
     def f(self):
         return self.g + self.h
 
-    def __repr__(self):
-        return f"||parent = {self.parent}, sum = {self.f}||"
+    # def __repr__(self):
+    #     return f"||parent = {self.parent}, sum = {self.f}||"
 
     @staticmethod
     def set_side_len(side_len):
