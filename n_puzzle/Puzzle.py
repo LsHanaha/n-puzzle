@@ -1,4 +1,6 @@
 class Puzzle(list):
+    side_len = None
+
     def __init__(self, *args, **kwargs):
         self.g = kwargs.pop("g")
         self.h = kwargs.pop("h")
@@ -26,6 +28,11 @@ class Puzzle(list):
 
     def __repr__(self):
         return f"||parent = {self.parent}, sum = {self.f}||"
+
+    @staticmethod
+    def set_side_len(side_len):
+        assert isinstance(side_len, int)
+        Puzzle.side_len = side_len
 
 
 if __name__ == '__main__':
