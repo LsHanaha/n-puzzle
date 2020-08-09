@@ -14,7 +14,6 @@ def a_star(puzzle: Puzzle, euristic: Callable[[List[int]], int]):
     while euristic(current_config):
         for neighbour in get_neighbours(current_config):
             permutation_id = hash(neighbour)
-
             if permutation_id not in visited:
                 neighbour.h = euristic(neighbour)
                 heapq.heappush(priority_q, neighbour)
