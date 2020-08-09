@@ -1,5 +1,5 @@
 from typing import List
-from Puzzle import Puzzle
+from .Puzzle import Puzzle
 
 
 def _cook_new_map(current: Puzzle, zero_id:int, new_id:int) -> Puzzle:
