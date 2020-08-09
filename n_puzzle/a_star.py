@@ -6,13 +6,15 @@ from typing import Callable, List
 
 
 def a_star(puzzle: Puzzle, euristic: Callable[[List[int]], int]):
-    priority_q = heapq()
-    visited = dict()
+    visited = {}
+    priority_q = []
+    heapq.heapify(priority_q)
 
     current_config = puzzle
     while euristic(current_config):
         for neighbour in get_neighbours(current_config):
             permutation_id = hash(neighbour)
+
             if permutation_id not in visited:
                 neighbour.h = euristic(neighbour)
                 heapq.heappush(priority_q, neighbour)
