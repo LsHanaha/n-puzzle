@@ -10,6 +10,8 @@
 
 class Puzzle
 {
+	private:
+		__uint128_t		hash = 0;
 	public:
 		static int			side_len;
 		int					g = 0;
