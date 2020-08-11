@@ -44,5 +44,6 @@ Puzzle	*a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle));
 
 int	hemming(const Puzzle *puzzle);
 int	manhattan(const Puzzle *puzzle);
+int	phased_manhattan(const Puzzle *puzzle);
 
 #endif

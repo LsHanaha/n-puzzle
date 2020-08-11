@@ -55,5 +55,6 @@ Puzzle	*a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 		current_config = q.top();
 		q.pop();
 	}
+	std::cout << visited.size() << " nodes visited \n";
 	return (current_config);
 }
