@@ -17,7 +17,7 @@ def count_sum(puzzle: list):
     zero_id = int(puzzle.index(size - 1) / int(sqrt(size))) + 1
     print(zero_id + res)
     assert (zero_id + res) % 2 == 0
-    print(zero_id + res)
+    return (zero_id + res) % 2 == 0
 
 
 a = [4, 5, 8, 12, 10, 13, 15, 3, 11, 2, 0, 14, 9, 6, 7, 1]

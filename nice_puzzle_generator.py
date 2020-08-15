@@ -29,11 +29,16 @@ def is_solvable(puzzle: list):
     res = 0
     size = len(puzzle)
     for i in range(size - 1):
-        if puzzle[i] == size - 1 or puzzle[i + 1] == size - 1:
+        if puzzle[i] == size - 1:
             continue
-        if puzzle[i] > puzzle[i + 1]:
-            res += 1
+        for j in range(i + 1, size):
+            if puzzle[j] == size - 1:
+                continue
+            if puzzle[i] > puzzle[j]:
+                res += 1
+
     zero_id = int(puzzle.index(size - 1) / int(sqrt(size))) + 1
+    print(zero_id + res)
     return (zero_id + res) % 2 == 0
 
 
