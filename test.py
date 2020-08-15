@@ -11,5 +11,4 @@ def test_can_reach_finish(puzzle):
     #assert a_star(puzzle, euristics.hemming) == goal
     assert a_star(puzzle, euristics.manhattan) == goal
 
-
-cProfile.run("test_can_reach_finish([4, 0, 8, 2, 10, 12, 5, 7, 13, 9, 3, 14, 15, 11, 6, 1])")
+cProfile.run("test_can_reach_finish([4, 0, 8, 2, 10, 12, 5, 7, 13, 9, 3, 14, 15,11, 6, 1])")
