@@ -5,8 +5,6 @@ from n_puzzle import euristics
 
 
 @pytest.mark.parametrize("puzzle", [
-    [0, 1, 2, 3],
-    [3, 8, 1, 7, 0, 6, 4, 5, 2],
     [4, 3, 9, 14, 2, 13, 7, 11, 5, 0, 6, 12, 15, 8, 1, 10]
 ])
 def test_can_reach_finish(puzzle):
