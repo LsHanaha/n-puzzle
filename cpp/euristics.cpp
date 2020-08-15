@@ -3,7 +3,7 @@
 int	hemming(const Puzzle *puzzle)
 {
 	int out = 0;
-	for (int i = 0; i < puzzle->map.size(); ++i)
+	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
 		out += (puzzle->map[i] == i);
 	return (out);
 }
@@ -18,7 +18,7 @@ int	manhattan(const Puzzle *puzzle)
 {
 	int out = 0;
 
-	for (int i = 0; i < puzzle->map.size(); ++i)
+	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
 		out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
 	return (out);
 }
@@ -27,7 +27,7 @@ int	phased_manhattan(const Puzzle *puzzle)
 {
 	int out[3] {0};
 
-	for (int i = 0; i < puzzle->map.size(); ++i)
+	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
 	{
 		if (puzzle->map[i] < Puzzle::side_len * (Puzzle::side_len - 2))
 			out[0] += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);

@@ -19,7 +19,7 @@ clear_memory(puzzle_map& visited, puzzle_q& q)
 	}
 }
 
-static inline Puzzle*
+inline static Puzzle*
 is_in(Puzzle *current_config, puzzle_map& visited)
 {
 	puzzle_map::iterator iter = visited.find(current_config->get_hash());
@@ -32,17 +32,16 @@ is_in(Puzzle *current_config, puzzle_map& visited)
 std::string
 a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 {
-	puzzle_map visited;
-	puzzle_q q;
-	std::vector<Puzzle*> *neighbours;
-	Puzzle	*found_elem;
+	puzzle_map	visited;
+	puzzle_q	q;
+	Puzzle		*found_elem;
 
 	while (euristic(current_config))
 	{
 		if ((found_elem = is_in(current_config, visited)))
 			delete found_elem;
 		visited[current_config->get_hash()] = current_config;
-		neighbours = get_neighbours(current_config);
+		std::vector<Puzzle*> *neighbours = get_neighbours(current_config);
 		for (Puzzle *neighbour: *neighbours)
 		{
 			if (!(found_elem = is_in(neighbour, visited)))

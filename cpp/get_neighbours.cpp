@@ -12,8 +12,8 @@ cook_new_map(Puzzle *current, int empty_id, int new_id)
 
 static int	locate_empty_tile(Puzzle *current)
 {
-	for (int i = 0; i < current->map.size(); ++i)
-		if (current->map[i] == current->map.size() - 1)
+	for (int i = 0; i < static_cast<int>(current->map.size()); ++i)
+		if (current->map[i] == static_cast<int>(current->map.size()) - 1)
 			return (i);
 	throw;
 }
@@ -30,7 +30,7 @@ get_neighbours(Puzzle *current)
 		result->push_back(cook_new_map(current, empty_id, empty_id - 1));
 	if (empty_id % Puzzle::side_len + 1 < Puzzle::side_len)
 		result->push_back(cook_new_map(current, empty_id, empty_id + 1));
-	if (empty_id + Puzzle::side_len < current->map.size())
+	if (empty_id + Puzzle::side_len < static_cast<int>(current->map.size()))
 		result->push_back(cook_new_map(current, empty_id, empty_id + Puzzle::side_len));
 
 	return result;

@@ -12,9 +12,9 @@ class Puzzle
 		int					g;
 		int					h;
 		std::vector<int>	map;
-		Puzzle				*parent = nullptr;
+		Puzzle				*parent;
 
-		Puzzle(const std::vector<int> &v = {}) : g(0), h(0), parent(nullptr), map(v) {}
+		Puzzle(const std::vector<int> &v = {}) : g(0), h(0), map(v), parent(nullptr) {}
 		Puzzle(std::initializer_list<int> l) : Puzzle() { map = l; }
 
 		__uint128_t		get_hash() const;

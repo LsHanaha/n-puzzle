@@ -16,7 +16,7 @@ def is_solvable(puzzle: list):
                 res += 1
 
     zero_id = int(puzzle.index(size - 1) / int(sqrt(size))) + 1
-    print(zero_id + res)
+    # print(zero_id + res)
     return (zero_id + res) % 2 == 0
 
 
@@ -25,7 +25,7 @@ def generator(size: int, solvable: bool):
     random.shuffle(puzzle)
     while (solvable != is_solvable(puzzle)):
         random.shuffle(puzzle)
-    print(f"This puzzle is {'' if solvable else 'un'}solvable")
+    # print(f"This puzzle is {'' if solvable else 'un'}solvable")
     print(*puzzle, sep=" ")
 
 

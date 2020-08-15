@@ -3,10 +3,10 @@
 static int
 find_empty_tile(Puzzle *state)
 {
-    size_t  size = state->map.size();
+    int	size = state->map.size();
     if (size == 0)
         throw std::runtime_error("A state cannot have an empty map");
-    for (unsigned i = 0; i < size; ++i)
+    for (int i = 0; i < size; ++i)
         if (state->map[i] == size - 1)
             return i;
     throw std::runtime_error("Could not find the empty tile");
