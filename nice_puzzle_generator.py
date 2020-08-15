@@ -3,28 +3,6 @@ import random
 import sys
 
 
-# def get_empty_tile_moves(puzzle: list):
-#     side_len = int(sqrt(len(puzzle)))
-#     zero_id = puzzle.index(len(puzzle) - 1)
-#     current_x = zero_id // side_len
-#     current_y = zero_id % side_len
-#     gold_x = (len(puzzle) - 1) // side_len
-#     gold_y = (len(puzzle) - 1) % side_len
-#     return abs(gold_x - current_x) + abs(gold_y - current_y)
-
-
-# def is_solvable(puzzle: list):
-#     temp_puzzle = puzzle.copy()
-#     sorted_puzzle = list(range(len(puzzle)))
-#     n_steps = 0
-#     for i in range(len(puzzle)):
-#         if temp_puzzle[i] != i:
-#             n_steps += 1
-#             temp_puzzle[temp_puzzle[i]] = temp_puzzle[i]
-#             temp_puzzle[i] = i
-#             print(temp_puzzle)
-#     return (n_steps + get_empty_tile_moves(puzzle)) % 2 == 0
-
 def is_solvable(puzzle: list):
     res = 0
     size = len(puzzle)
@@ -56,12 +34,3 @@ if __name__ == "__main__":
     assert sys.argv[2] == "solvable" or sys.argv[2] == "unsolvable"
     solvable = sys.argv[2] == "solvable"
     generator(size, solvable)
-
-
-15, 12, 7, 5, 0, 14, 10, 1, 11, 4, 9, 6, 8, 2, 3, 13
-
-1, 12, 13, 11, 9, 10, 4, 2, 5, 15, 7, 3, 0, 14, 6, 8
-
-13, 14, 2, 0, 6, 11, 12, 15, 1, 3, 7, 5, 9, 8, 10, 4
-
-4, 6, 8, 1, 7, 14, 13, 5, 10, 11, 2, 9, 0, 3, 15, 12
