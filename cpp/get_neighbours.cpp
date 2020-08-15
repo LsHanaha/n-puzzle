@@ -1,4 +1,4 @@
-#include "n_puzzle.h"
+#include "n_puzzle.hpp"
 
 static Puzzle*
 cook_new_map(Puzzle *current, int empty_id, int new_id)

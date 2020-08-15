@@ -1,4 +1,4 @@
-#include "n_puzzle.h"
+#include "Puzzle.hpp"
 
 int				Puzzle::side_len;
 

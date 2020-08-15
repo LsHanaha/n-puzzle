@@ -1,4 +1,4 @@
-#include "n_puzzle.h"
+#include "n_puzzle.hpp"
 
 int	hemming(const Puzzle *puzzle)
 {

@@ -1,60 +1,75 @@
-#include "n_puzzle.h"
+#include "n_puzzle.hpp"
+#include <iostream>
+#include <queue>
+#include <unordered_map>
 
 typedef std::unordered_map<__uint128_t, Puzzle *> puzzle_map;
 typedef std::priority_queue<Puzzle*, std::vector<Puzzle*>, CmpPuzzle> puzzle_q;
 
-// дебажное
-void	print_puzzle(Puzzle *puzzle)
+static void
+clear_memory(puzzle_map& visited, puzzle_q& q)
 {
-	for (int i = 0; i < puzzle->map.size(); ++i)
-		std::cout << puzzle->map[i] << ((i % Puzzle::side_len == Puzzle::side_len - 1) ? "\n" : " ");
-	std::cout << "\n\n";
+	for (auto &elem: visited)
+		delete elem.second;
+	while (!q.empty())
+	{
+		Puzzle *current = q.top();
+		q.pop();
+		delete current;
+	}
 }
 
-// дебажное
-void	print(Puzzle *puzzle)
+static inline Puzzle*
+is_in(Puzzle *current_config, puzzle_map& visited)
 {
-	std::cout << "puzzle:\n";
-	print_puzzle(puzzle);
-	std::cout << "from:\n";
-	if (puzzle->parent != nullptr)
-		print_puzzle(puzzle->parent);
-	std::cout << "g=" << puzzle->g << ",h=" << puzzle->h << ",f=" << puzzle->f() << "\n\n================\n";
+	puzzle_map::iterator iter = visited.find(current_config->get_hash());
+	if (iter != visited.end())
+		return iter->second;
+	else
+		return nullptr;
 }
 
-Puzzle	*a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
+std::string
+a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 {
 	puzzle_map visited;
 	puzzle_q q;
 	std::vector<Puzzle*> *neighbours;
-	__uint128_t permutation_id;
-	puzzle_map::iterator iter;
+	Puzzle	*found_elem;
 
 	while (euristic(current_config))
 	{
+		if ((found_elem = is_in(current_config, visited)))
+			delete found_elem;
 		visited[current_config->get_hash()] = current_config;
 		neighbours = get_neighbours(current_config);
-		for (Puzzle *&neighbour: *neighbours)
+		for (Puzzle *neighbour: *neighbours)
 		{
-			permutation_id = neighbour->get_hash();
-			iter = visited.find(permutation_id);
-			if (iter == visited.end()) // not in visited
+			if (!(found_elem = is_in(neighbour, visited)))
 			{
 				neighbour->h = euristic(neighbour);
 				q.push(neighbour);
 			}
-			else if (current_config->g + 1 < (*iter).second->g)
+			else
 			{
-				(*iter).second->g = current_config->g + 1;
-				(*iter).second->parent = current_config;
+				if (current_config->g + 1 < found_elem->g)
+				{
+					found_elem->g = current_config->g + 1;
+					found_elem->parent = current_config;
+				}
+				delete neighbour;
 			}
 		}
 		delete neighbours;
-		if (q.size() == 0)	// отлова ошибок ради, потом можно убрать
-			throw;
+		if (q.size() == 0)
+			throw std::runtime_error("Queue cannot be empty");
 		current_config = q.top();
 		q.pop();
 	}
-	std::cout << visited.size() << " nodes visited \n";
-	return (current_config);
+	std::cout << "Total states visited:   " << visited.size() << std::endl;
+	std::cout << "Total states in memory: " << visited.size() + q.size() << std::endl;
+	std::string	move_sequence = get_sequence(current_config);
+	delete current_config;
+	clear_memory(visited, q);
+	return (move_sequence);
 }
