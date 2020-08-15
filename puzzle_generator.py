@@ -3,6 +3,7 @@
 import sys
 import argparse
 import random
+from math import sqrt
 
 
 def make_puzzle(s, solvable, iterations):
@@ -61,6 +62,33 @@ def make_goal(s):
     return puzzle
 
 
+def is_solvable(puzzle: list):
+    res = 0
+    size = len(puzzle)
+    for i in range(size - 1):
+        if puzzle[i] == size - 1:
+            continue
+        for j in range(i + 1, size):
+            if puzzle[j] == size - 1:
+                continue
+            if puzzle[i] > puzzle[j]:
+                res += 1
+
+    zero_id = int(puzzle.index(size - 1) / int(sqrt(size))) + 1
+    # print(zero_id + res)
+    return (zero_id + res) % 2 == 0
+
+
+def convert(puzzle):
+    out = puzzle.copy()
+    for i in range(len(puzzle)):
+        if out[i] == 0:
+            out[i] = 15
+        else:
+            out[i] -= 1
+    return out
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
@@ -76,27 +104,32 @@ if __name__ == "__main__":
     random.seed()
 
     if args.solvable and args.unsolvable:
-        print ("Can't be both solvable AND unsolvable, dummy !")
+        print("Can't be both solvable AND unsolvable, dummy !")
         sys.exit(1)
 
     if args.size < 3:
-        print ("Can't generate a puzzle with size lower than 2. It says so in the help. Dummy.")
+        print("Can't generate a puzzle with size lower than 2. It says so in the help. Dummy.")
         sys.exit(1)
 
-    if not args.solvable and not args.unsolvable:
-        solv = random.choice([True, False])
-    elif args.solvable:
+    if args.solvable:
         solv = True
     elif args.unsolvable:
         solv = False
+    else:
+        solv = random.choice([True, False])
 
     s = args.size
 
     puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
+    print(puzzle)
+    puzzle = convert(puzzle)
+    print(puzzle)
+    res = is_solvable(puzzle)
+    print("# my check %s" % ("solvable" if res else "unsolvable"))
 
     w = len(str(s * s))
-    print ("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
-    print ("%d" % s)
+    print("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+    print("%d" % s)
     for y in range(s):
         for x in range(s):
             print ("%s" % (str(puzzle[x + y * s]).rjust(w)))
