@@ -29,6 +29,16 @@ is_in(Puzzle *current_config, puzzle_map& visited)
 		return nullptr;
 }
 
+inline static Puzzle*
+pop(puzzle_q& q)
+{
+	if (q.size() == 0)
+			throw std::runtime_error("Queue cannot be empty");
+	Puzzle	*out = q.top();
+	q.pop();
+	return out;
+}
+
 std::string
 a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 {
@@ -39,7 +49,11 @@ a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 	while (euristic(current_config))
 	{
 		if ((found_elem = is_in(current_config, visited)))
-			delete found_elem;
+		{
+			delete current_config;
+			current_config = pop(q);
+			continue;
+		}
 		visited[current_config->get_hash()] = current_config;
 		std::vector<Puzzle*> *neighbours = get_neighbours(current_config);
 		for (Puzzle *neighbour: *neighbours)
@@ -60,10 +74,7 @@ a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 			}
 		}
 		delete neighbours;
-		if (q.size() == 0)
-			throw std::runtime_error("Queue cannot be empty");
-		current_config = q.top();
-		q.pop();
+		current_config = pop(q);
 	}
 	std::cout << "Total states visited:   " << visited.size() << std::endl;
 	std::cout << "Total states in memory: " << visited.size() + q.size() << std::endl;

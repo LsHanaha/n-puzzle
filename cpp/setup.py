@@ -1,6 +1,9 @@
 import os
 from distutils.core import setup, Extension
 
+os.environ["CC"] = "clang"
+os.environ["CXX"] = "clang++"
+
 sources = ["a_star.cpp",
 		   "cpp_backend_module.cpp",
 		   "euristics.cpp",
