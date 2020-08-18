@@ -38,3 +38,32 @@ int	phased_manhattan(const Puzzle *puzzle)
 	}
 	return out[0] * 4 + out[1] * 2 + out[2];
 }
+
+static void init_weights(std::vector<int>& weights)
+{
+	weights.resize(Puzzle::side_len * Puzzle::side_len, 1);
+	for (int i = weights.size() - 1; i >= 0; --i)
+	{
+		if (i / Puzzle::side_len < Puzzle::side_len - 2)
+		{
+			weights[i] = (Puzzle::side_len - i / Puzzle::side_len) * 2;
+		}
+		else if (i % Puzzle::side_len < Puzzle::side_len - 2)
+		{
+			weights[i] = (Puzzle::side_len - i / Puzzle::side_len);
+			weights[i] += Puzzle::side_len - i % Puzzle::side_len;
+		}
+	}
+}
+
+int	rowwise_manhattan(const Puzzle *puzzle)
+{
+	int out = 0;
+	static std::vector<int> weights;
+
+	if (!weights.size())
+		init_weights(weights);
+	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
+		out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * weights[puzzle->map[i]];
+	return out;
+}

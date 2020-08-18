@@ -3,7 +3,7 @@
 #include <queue>
 #include <unordered_map>
 
-typedef std::unordered_map<__uint128_t, Puzzle *> puzzle_map;
+typedef std::unordered_map<std::string, Puzzle *> puzzle_map;
 typedef std::priority_queue<Puzzle*, std::vector<Puzzle*>, CmpPuzzle> puzzle_q;
 
 static void
