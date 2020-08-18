@@ -1,18 +1,19 @@
 #include "Puzzle.hpp"
 
-int				Puzzle::side_len;
+int					Puzzle::side_len;
 
-__uint128_t		Puzzle::get_hash() const // максимум для паззла из 16
+const std::string&	Puzzle::get_hash()
 {
-	if (hash)
+	if (!hash.empty())
 		return (hash);
 
-	__uint128_t	out = 0;
-
-	for (const auto &elem: map)
+	for (unsigned i = 0; i < map.size(); ++i)
 	{
-		out += elem;
-		out = (out << 4);
+		if (i % 2 == 0)
+			hash.push_back(0);
+		else
+			hash[i / 2] <<= 4;
+		hash[i / 2] += map[i];
 	}
-	return (out);
+	return (hash);
 }

@@ -1,12 +1,13 @@
 #ifndef PUZZLE_HPP
 #define PUZZLE_HPP
 
+#include <string>
 #include <vector>
 
 class Puzzle
 {
 	private:
-		__uint128_t		hash = 0;
+		std::string			hash;
 	public:
 		static int			side_len;
 		int					g;
@@ -17,10 +18,10 @@ class Puzzle
 		Puzzle(const std::vector<int> &v = {}) : g(0), h(0), map(v), parent(nullptr) {}
 		Puzzle(std::initializer_list<int> l) : Puzzle() { map = l; }
 
-		__uint128_t		get_hash() const;
+		const std::string&	get_hash();
 
-		static void		set_side_len(int len) { side_len = len; }
-		int				f() const { return h + g; }
+		static void			set_side_len(int len) { side_len = len; }
+		int					f() const { return h + g; }
 
 };
 
