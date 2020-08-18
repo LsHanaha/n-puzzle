@@ -2,60 +2,23 @@
 from math import sqrt
 
 
-def is_solvable(puzzle: list):
-    res = 0
-    size = len(puzzle)
-    for i, checker in enumerate(puzzle[:-1]):
-        if checker == size - 1:
-            continue
-        for checked in puzzle[i + 1:]:
-            if checked == size - 1:
-                continue
-            if checker > checked:
-                res += 1
-    # if size % 2 == 0:
-    zero_id = int(puzzle.index(size - 1) / int(sqrt(size))) + 1
-    # else:
-    #     zero_id = 0
-    return (zero_id + res) % 2 == 0
-
-
-def is_solvable2(puzzle):
+def is_solvable(puzzle):
     res = 0
 
     size = len(puzzle)
     for i in range(size - 1):
+        if not puzzle[i]:
+            continue
         for j in range(i+1, size):
             if puzzle[j] and puzzle[i] and puzzle[i] > puzzle[j]:
                 res += 1
+    print("res = ", res) # 13 12 6 11 10 6 5 7 5 5 1 3 2 1
+    # [0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1] 14 13 12 11 10 9 8 7 6 5 4 3 2 1
     if size % 2:
         return res % 2 == 0
-    zero_id = int(puzzle.index(size - 1) / sqrt(size)) + 1
-    return (res + zero_id) % 2 == 1
-
-
-
-def is_solvable3(tiles):
-    count = 0
-
-    size = len(tiles)
-    for i in range(size - 1):
-        for j in range(i+1, size):
-            if tiles[j] and tiles[i] and tiles[i] > tiles[j]:
-                count += 1
-
-    return count % 2 == 0
-
-
-def is_solvable4(puzzle):
-    inv_count = 0
-    size = len(puzzle)
-    for i in range(size - 1):
-        for j in range(i + 1, size):
-            if (puzzle[j] and puzzle[i]) and (puzzle[i] > puzzle[j]):
-                inv_count += 1
-    print(inv_count)
-    return inv_count % 2 == 0
+    zero_id = puzzle.index(0) // sqrt(size) + 1
+    print("zero_id = ", zero_id)
+    return (res + zero_id) % 2 == 0
 
 
 def converter(puzzle):
@@ -84,33 +47,22 @@ def normal_shape(puzzle):
         res.extend(brick)
     return res
 
-# def shit_shape(puzzle):
-#     1, 2, 3, 4,
-#     12, 13, 14, 5,
-#     11, 0, 15, 6,
-#     10, 9, 8, 7
-#     side_len = int(sqrt(len(puzzle)))
-#     temp = []
-#     res = []
-#
+
+def shit_shape(puzzle):
+
+    puzzle_len = len(puzzle)
+    side_len = int(sqrt(puzzle_len))
+    puzzle_2d = [puzzle[i:i+side_len] for i in range(0, puzzle_len, side_len)]
+
+    res = [*puzzle_2d.pop(0)]
+    while puzzle_2d:
+        puzzle_2d = [row for row in zip(*puzzle_2d)][::-1]
+        res.extend(puzzle_2d.pop(0))
+    return res
+
 
 if __name__ == "__main__":
-    my_test = [15,
- 0,
-13,
- 2,
- 7,
-10,
-11,
- 6,
- 3,
- 5,
- 1,
-12,
- 8,
- 9,
-14,
- 4]
-    res = normal_shape(my_test)
+    my_test = [0,14,13,7,15,12,8,6,11,9,5,2,10,4,3,1]
+    res = is_solvable2(my_test)
     print(res)
 

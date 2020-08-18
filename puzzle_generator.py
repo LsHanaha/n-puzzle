@@ -93,24 +93,11 @@ if __name__ == "__main__":
     s = args.size
 
     puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
-    print("puzzle = ", puzzle)
+    # print("puzzle = ", puzzle)
     w = len(str(s * s))
     print("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+    print("[", end="")
     for y in range(s):
         for x in range(s):
-            print("%s" % (str(puzzle[x + y * s]).rjust(w)))
-
-
-    def normal_shape(puzzle):
-        side_len = int(sqrt(len(puzzle)))
-        res = []
-
-        for i, value in enumerate(puzzle[::side_len]):
-            if i % 2 == 0:
-                brick = puzzle[i * side_len: (i + 1) * side_len]
-            else:
-                brick = puzzle[i * side_len: (i + 1) * side_len]
-                brick = brick[::-1]
-            res.extend(brick)
-        return res
-    print("normal_shape = ", normal_shape(puzzle))
+            print("%s," % (str(puzzle[x + y * s])), end=' ')
+    print("]\n", end="")
