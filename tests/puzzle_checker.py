@@ -20,7 +20,7 @@ def is_solvable(puzzle):
     print("zero_id = ", zero_id)
     return (res + zero_id) % 2 == 0
 
-
+# yep
 def converter(puzzle):
     if isinstance(puzzle, str):
         puzzle = [int(i) for i in puzzle]
