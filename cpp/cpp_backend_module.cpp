@@ -14,6 +14,10 @@ static char	*call_backend(int side_len, int *array, char *euristic)
 		euristic_fun = phased_manhattan;
 	else if (euristic_name == "rowwise_manhattan")
 		euristic_fun = rowwise_manhattan;
+	else if (euristic_name == "uniform")
+		euristic_fun = uniform;
+	else if (euristic_name == "greedy_manhattan")
+		euristic_fun = greedy_manhattan;
 	else
 		throw std::runtime_error("Unknown euristic");
 

@@ -1,10 +1,12 @@
 #include "n_puzzle.hpp"
 
+#include <iostream>
+
 int	hemming(const Puzzle *puzzle)
 {
 	int out = 0;
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += (puzzle->map[i] == i);
+		out += (puzzle->map[i] != i);
 	return (out);
 }
 
@@ -25,18 +27,18 @@ int	manhattan(const Puzzle *puzzle)
 
 int	phased_manhattan(const Puzzle *puzzle)
 {
-	int out[3] {0};
+	int out = 0;
 
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
 	{
 		if (puzzle->map[i] < Puzzle::side_len * (Puzzle::side_len - 2))
-			out[0] += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
+			out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * 4;
 		else if (puzzle->map[i] % Puzzle::side_len < Puzzle::side_len - 2)
-			out[1] += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
+			out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * 2;
 		else
-			out[2] += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
+			out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
 	}
-	return out[0] * 4 + out[1] * 2 + out[2];
+	return out;
 }
 
 static void init_weights(std::vector<int>& weights)
@@ -66,4 +68,21 @@ int	rowwise_manhattan(const Puzzle *puzzle)
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
 		out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * weights[puzzle->map[i]];
 	return out;
+}
+
+int	uniform(const Puzzle *puzzle)
+{
+	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
+		if (puzzle->map[i] != i)
+			return (1);
+	return (0);
+}
+
+int	greedy_manhattan(const Puzzle *puzzle)
+{
+	//hacky-hacky.
+	uintptr_t addr = reinterpret_cast<uintptr_t>(puzzle);
+	Puzzle* deconst = reinterpret_cast<Puzzle*>(addr);
+	deconst->g = 0;
+	return manhattan(puzzle);
 }
