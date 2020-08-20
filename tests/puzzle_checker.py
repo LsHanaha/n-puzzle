@@ -12,15 +12,12 @@ def is_solvable(puzzle):
         for j in range(i+1, size):
             if puzzle[j] and puzzle[i] and puzzle[i] > puzzle[j]:
                 res += 1
-    print("res = ", res) # 13 12 6 11 10 6 5 7 5 5 1 3 2 1
-    # [0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1] 14 13 12 11 10 9 8 7 6 5 4 3 2 1
     if size % 2:
         return res % 2 == 0
     zero_id = puzzle.index(0) // sqrt(size) + 1
-    print("zero_id = ", zero_id)
     return (res + zero_id) % 2 == 0
 
-# yep
+
 def converter(puzzle):
     if isinstance(puzzle, str):
         puzzle = [int(i) for i in puzzle]

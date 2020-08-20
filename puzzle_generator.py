@@ -93,11 +93,9 @@ if __name__ == "__main__":
     s = args.size
 
     puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
-    # print("puzzle = ", puzzle)
     w = len(str(s * s))
+    print(s)
     print("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
-    print("[", end="")
     for y in range(s):
         for x in range(s):
-            print("%s," % (str(puzzle[x + y * s])), end=' ')
-    print("]\n", end="")
+            print("%s" % (str(puzzle[x + y * s]).rjust(w)))
