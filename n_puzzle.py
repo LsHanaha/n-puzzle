@@ -141,6 +141,11 @@ def activate_tty():
                         help="Quiet mode.")
     parser.add_argument("-v", default=False, action="store_true",
                         help="Activate advanced output information.")
+    parser.add_argument("-e", type=str, default='manh',
+                        help="Choose heuristic for solution. Default is simple manhattan. "
+                             "Available:\n manh - manhattan(default);\nheim - Haimling;\n"
+                             "super - upgraded manhattan;\nbest - the best manhattan;\n"
+                             "greedy - activate greedy mode;\nyolo - fuck mandatory, cause yolo!;")
 
     args = parser.parse_args()
     return args
