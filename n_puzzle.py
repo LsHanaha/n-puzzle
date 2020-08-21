@@ -2,7 +2,7 @@ import argparse
 import sys
 from typing import Optional, List, Tuple, Union
 from puzzle_checker import is_solvable
-
+from n_puzzle.solve_puzzle import Solver
 
 class GetPuzzle:
 
@@ -141,7 +141,10 @@ def activate_tty():
                         help="Quiet mode.")
     parser.add_argument("-v", default=False, action="store_true",
                         help="Activate advanced output information.")
-    parser.add_argument("-e", type=str, default='manh',
+    parser.add_argument("--cpp", default=False, action="store_true",
+                        help="Activate c++ backend.")
+    parser.add_argument("--he", type=str, default='manh', choices=['manh', 'heim', 'super',
+                                                                   'best', 'greedy', 'yolo'],
                         help="Choose heuristic for solution. Default is simple manhattan. "
                              "Available:\n manh - manhattan(default);\nheim - Haimling;\n"
                              "super - upgraded manhattan;\nbest - the best manhattan;\n"
@@ -177,8 +180,8 @@ def main():
               f"\nЗавершаем работу приложения")
         exit()
 
-    # print(size, puzzle)
-    HandleResult(puzzle, size).show_result("llllrrrrud", args.q or args.v)
+    result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle)
+    HandleResult(puzzle, size).show_result(result, args.q or args.v)
 
 
 if __name__ == "__main__":

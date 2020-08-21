@@ -1,10 +1,12 @@
 class Puzzle(list):
     side_len = None
+    __slots__ = "g", "h", "parent", "move"
 
     def __init__(self, *args, **kwargs):
         self.g = kwargs.pop("g")
         self.h = kwargs.pop("h")
         self.parent = kwargs.pop("parent")
+        self.move = None
         super().__init__(*args, **kwargs)
 
     def __hash__(self):
@@ -19,6 +21,9 @@ class Puzzle(list):
             out //= length
         return out
 
+    def set_move(self, move):
+        self.move = move
+
     def __lt__(self, other):
         return self.f < other.f
 
@@ -26,29 +31,7 @@ class Puzzle(list):
     def f(self):
         return self.g + self.h
 
-    # def __repr__(self):
-    #     return f"||parent = {self.parent}, sum = {self.f}||"
-
     @staticmethod
     def set_side_len(side_len):
         assert isinstance(side_len, int)
         Puzzle.side_len = side_len
-
-
-if __name__ == '__main__':
-    import heapq
-    import random
-
-    queue = []
-    heapq.heapify(queue)
-
-    for i in range(40):
-        new_obj = Puzzle(g=random.randint(1, 1000), h=random.randint(1, 1000), parent=str(i))
-        heapq.heappush(queue, new_obj)
-
-    for i in range(40):
-        print(heapq.heappop(queue))
-
-
-
-

@@ -1,5 +1,5 @@
 import pytest
-from n_puzzle.Puzzle import Puzzle
+from n_puzzle.puzzle import Puzzle
 from n_puzzle import euristics
 
 
