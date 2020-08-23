@@ -1,9 +1,9 @@
-from typing import List, Callable
+from typing import List, Callable, Tuple
 from n_puzzle.heuristics import manhattan, hemming, phased_manh, \
     rowwise_manhattan, uniform
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
-from n_puzzle.converters import converter
+from n_puzzle.converters import converter, convert_to_indexes
 
 
 class Solver:
@@ -11,10 +11,18 @@ class Solver:
         self._heuristic = heuristic
         self.backend = backend
 
+
+
+
     def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int]) -> str:
         puzzle_converted = converter(puzzle)
         res = PythonBackend(self._heuristic).solve_puzzle(size, puzzle_converted)
         return res
+
+    def _convert_goal_to_indexes(self, puzzle: List[int], size: int) -> List[Tuple[int, int]]:
+
+        goal = convert_to_indexes(puzzle, size)
+        return goal
 
     def select_backend(self):
         pass

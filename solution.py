@@ -207,26 +207,16 @@ def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int], List[int]]:
     return size, puzzle, goal
 
 
-
-def convert_goal_to_indexes(puzzle: List[int], size: int):
-
-    goal = convert_to_indexes(puzzle, size)
-    print(goal)
-    return goal
-
-
-
 def main():
 
     args = activate_tty()
     size, puzzle, goal = read_puzzle(args)
-    #TODO remove
+    # TODO remove
     HandleResult(puzzle, size)._print_puzzle(puzzle)
     if not is_solvable(puzzle, goal, size):
         print(f"Puzzle '{puzzle}' have no solution."
               f"\nThis is the end")
         exit()
-    print('start')
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
 
