@@ -31,6 +31,6 @@ def is_solvable(puzzle):
             if puzzle[j] and puzzle[i] and puzzle[i] > puzzle[j]:
                 res += 1
     if size % 2:
-        return res % 2 == 0
+        return res % 2 != 0
     zero_id = puzzle.index(0) // sqrt(size) + 1
     return (res + zero_id) % 2 == 0

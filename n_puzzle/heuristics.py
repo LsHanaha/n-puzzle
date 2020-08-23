@@ -49,7 +49,7 @@ def init_weights(weights: list, puzzle: Puzzle):
 def rowwise_manhattan(puzzle: Puzzle):
 
     out = 0
-    weights = [0 for i in range(puzzle.puzzle_len)]
+    weights = [1 for i in range(puzzle.puzzle_len)]
 
     if not weights:
         init_weights(weights, puzzle)

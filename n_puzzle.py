@@ -183,10 +183,10 @@ def main():
     args = activate_tty()
     size, puzzle = read_puzzle(args)
     HandleResult(puzzle, size)._print_puzzle(puzzle)
-    # if not is_solvable(puzzle):
-    #     print(f"Puzzle '{puzzle}' have no solution."
-    #           f"\nThis is the end")
-    #     exit()
+    if not is_solvable(puzzle):
+        print(f"Puzzle '{puzzle}' have no solution."
+              f"\nThis is the end")
+        exit()
     print('start')
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
