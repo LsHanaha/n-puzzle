@@ -3,6 +3,7 @@ from n_puzzle.heuristics import manhattan, hemming, phased_manh, \
     rowwise_manhattan, uniform
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
+from n_puzzle.converters import converter
 
 
 class Solver:
@@ -10,20 +11,9 @@ class Solver:
         self._heuristic = heuristic
         self.backend = backend
 
-    def solve_puzzle(self, size: int, puzzle: List[int]) -> str:
-        puzzle_converted = self.converter(puzzle)
+    def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int]) -> str:
+        puzzle_converted = converter(puzzle)
         res = PythonBackend(self._heuristic).solve_puzzle(size, puzzle_converted)
-        return res
-
-    @staticmethod
-    def converter(puzzle: List[int]):
-        res = []
-        size = len(puzzle) - 1
-        for val in puzzle:
-            if val == 0:
-                res.append(size)
-                continue
-            res.append(val - 1)
         return res
 
     def select_backend(self):

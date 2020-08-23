@@ -2,6 +2,7 @@ import argparse
 import sys
 from typing import Optional, List, Tuple, Union
 from puzzle_checker import is_solvable
+from n_puzzle.converters import converter, convert_to_indexes
 from n_puzzle.solve_puzzle import Solver
 
 
@@ -14,8 +15,9 @@ class GetPuzzle:
             size, puzzle = self._read_file(args)
         else:
             size, puzzle = self._read_pipe()
-
-        return size, puzzle
+        
+        goal = self.get_goal(args, size)
+        return size, puzzle, goal
 
     def _read_pipe(self) -> Tuple[int, List[int]]:
         data = []
@@ -48,7 +50,7 @@ class GetPuzzle:
     def _read_puzzle(self, raw_puzzle: List[str]) -> Tuple[int, List[int]]:
         data = []
         for row in raw_puzzle:
-            if "#" in row:
+            if isinstance(row, str) and "#" in row:
                 row = row[:row.index('#')]
             if row:
                 data.append(row.strip())
@@ -70,6 +72,14 @@ class GetPuzzle:
             return size, puzzle
         raise ValueError("Where is the integers?")
 
+    def get_goal(self,  args: argparse.Namespace, size: int) -> List[int]:
+        goal = args.goal
+        if goal:
+            self._check_symbols(size, goal, target='goal')
+        else:
+            goal = self._get_default_goal(size)
+        return goal
+
     @staticmethod
     def __convert_list_to_int(array: List[str]) -> List[int]:
         try:
@@ -79,7 +89,7 @@ class GetPuzzle:
         return res
 
     @staticmethod
-    def _check_symbols(size: int, puzzle: List[Union[int, str]]) -> None:
+    def _check_symbols(size: int, puzzle: List[Union[int, str]], target: str = 'puzzle') -> None:
 
         if size is None or not isinstance(size, int):
             raise ValueError("Only int allowed")
@@ -88,9 +98,26 @@ class GetPuzzle:
 
         valid_puzzle = [i for i in range(size * size)]
         if sorted(puzzle) != valid_puzzle:
-            raise ValueError("This puzzle is wrong. Check symbols and it's count. "
-                             "Values in puzzle have to be in range [0, size*size - 1]."
-                             " Repeats are unacceptable.")
+            raise ValueError(f"This {target} is wrong. Check symbols and it's count. "
+                             f"Values in {target} have to be in range [0, size*size - 1]."
+                             f" Repeats are unacceptable.")
+
+    @staticmethod
+    def _get_default_goal(size: int):
+        if size == 2:
+            goal = [1, 2, 4, 3]
+        elif size == 3:
+            goal = [1, 2, 3, 8, 0, 4, 7, 6, 5]
+        elif size == 4:
+            goal = [1, 2, 3, 4, 12, 13, 14, 5, 11, 0, 15, 6, 10, 9, 8, 7]
+        elif size == 5:
+            goal = [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 0, 20, 7, 14, 23, 22, 21, 
+            8, 13, 12, 11, 10, 9]
+        elif size == 6:
+            pass
+        else:
+            pass
+        return goal
 
 
 class HandleResult:
@@ -138,10 +165,12 @@ class HandleResult:
 
 def activate_tty():
     parser = argparse.ArgumentParser(description="Add some arguments or use pipe. It's up to you")
-    parser.add_argument("-s", "--size", type=int, default=None,
-                        help="Size of the puzzle's side. Must be >= 2.")
+    parser.add_argument('-s', "--size", type = int, 
+                        help="Length of your puzzle side")
     parser.add_argument("-p", "--puzzle", type=int, nargs='+',
                         help="Puzzle himself")
+    parser.add_argument('-g', "--goal", type = int, nargs='+', default=None,
+                        help="It's goal configuration of puzzle. Snail as default")
     parser.add_argument("-f", "--file", type=str, default=False,
                         help="Read puzzle from file")
     parser.add_argument("-q", default=False, action="store_true",
@@ -161,11 +190,11 @@ def activate_tty():
     return args
 
 
-def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int]]:
+def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int], List[int]]:
     error = False
 
     try:
-        size, puzzle = GetPuzzle().get_puzzle(args)
+        size, puzzle, goal = GetPuzzle().get_puzzle(args)
     except (ValueError, BrokenPipeError) as e:
         print(e, " \nThis is the end.")
         error = True
@@ -175,20 +204,30 @@ def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int]]:
 
     if error:
         exit()
-    return size, puzzle
+    return size, puzzle, goal
+
+
+
+def convert_goal_to_indexes(puzzle: List[int], size: int):
+
+    goal = convert_to_indexes(puzzle, size)
+    print(goal)
+    return goal
+
 
 
 def main():
 
     args = activate_tty()
-    size, puzzle = read_puzzle(args)
+    size, puzzle, goal = read_puzzle(args)
+    #TODO remove
     HandleResult(puzzle, size)._print_puzzle(puzzle)
-    if not is_solvable(puzzle):
+    if not is_solvable(puzzle, goal, size):
         print(f"Puzzle '{puzzle}' have no solution."
               f"\nThis is the end")
         exit()
     print('start')
-    result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle)
+    result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
 
 
