@@ -4,19 +4,21 @@ from typing import List, Dict
 
 
 
-def count_inversions(puzzle, goal, size):
+def count_inversions(puzzle: List[int], goal: List[int], side_len: int) -> int:
+    
     res = 0
-    for i in range(size * size - 1):
-        for j in range(i + 1, size * size):            
-                vi = puzzle[i]
-                vj = puzzle[j]
-                if goal.index(vi) > goal.index(vj):
+    size = side_len * side_len
+    for i in range(size - 1):
+        for j in range(i + 1, size):            
+                pi = puzzle[i]
+                pj = puzzle[j]
+                if goal.index(pi) > goal.index(pj):
                     res += 1
     return res
 
 
 
-def get_manhattan_score(puzzle, goal, side_len):
+def get_manhattan_score(puzzle: List[int], goal: List[int], side_len: int) -> int:
 
     puzzle_row = puzzle.index(0) // side_len
     puzzle_column = puzzle.index(0) % side_len
@@ -27,27 +29,10 @@ def get_manhattan_score(puzzle, goal, side_len):
 
 
 
-def is_solvable(puzzle, goal, side_len):
+def is_solvable(puzzle: List[int], goal: List[int], side_len: int) -> bool:
 
-    size = len(puzzle)
     inversions = count_inversions(puzzle, goal, side_len)
     dist = get_manhattan_score(puzzle, goal, side_len)
     if not (dist + inversions) % 2:
         return True
     return False
-
-
-# def is_solvable2(puzzle):
-#     res = 0
-
-#     size = len(puzzle)
-#     for i in range(size - 1):
-#         if not puzzle[i]:
-#             continue
-#         for j in range(i+1, size):
-#             if puzzle[j] and puzzle[i] and puzzle[i] > puzzle[j]:
-#                 res += 1
-#     if size % 2:
-#         return res % 2 != 0
-#     zero_id = puzzle.index(0) // sqrt(size) + 1
-#     return (res + zero_id) % 2 == 0
