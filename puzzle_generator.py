@@ -3,7 +3,7 @@
 import sys
 import argparse
 import random
-from math import sqrt
+
 
 def make_puzzle(s, solvable, iterations):
     def swap_empty(p):
@@ -76,11 +76,13 @@ if __name__ == "__main__":
     random.seed()
 
     if args.solvable and args.unsolvable:
-        print("Can't be both solvable AND unsolvable, dummy !")
+        print (
+        "Can't be both solvable AND unsolvable, dummy !")
         sys.exit(1)
 
     if args.size < 3:
-        print("Can't generate a puzzle with size lower than 2. It says so in the help. Dummy.")
+        print(
+        "Can't generate a puzzle with size lower than 2. It says so in the help. Dummy.")
         sys.exit(1)
 
     if not args.solvable and not args.unsolvable:
@@ -93,9 +95,14 @@ if __name__ == "__main__":
     s = args.size
 
     puzzle = make_puzzle(s, solvable=solv, iterations=args.iterations)
+
     w = len(str(s * s))
-    print(s)
-    print("# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+    print(
+    "# This puzzle is %s" % ("solvable" if solv else "unsolvable"))
+    print(
+    "%d" % s)
     for y in range(s):
         for x in range(s):
-            print("%s" % (str(puzzle[x + y * s]).rjust(w)))
+            print(
+            "%s" % (str(puzzle[x + y * s]).rjust(w)),)
+        print()

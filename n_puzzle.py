@@ -4,6 +4,7 @@ from typing import Optional, List, Tuple, Union
 from puzzle_checker import is_solvable
 from n_puzzle.solve_puzzle import Solver
 
+
 class GetPuzzle:
 
     def get_puzzle(self, args: argparse.Namespace) -> Tuple[int, List[int]]:
@@ -20,8 +21,9 @@ class GetPuzzle:
         data = []
         for row in sys.__stdin__:
             data.append(row)
+        print("pipe = ", data)
         if not data:
-            raise BrokenPipeError("Отсутсвуют данные в Pipe")
+            raise BrokenPipeError("Found nothing in Pipe")
         size, puzzle = self._read_puzzle(data)
         return size, puzzle
 
@@ -33,7 +35,7 @@ class GetPuzzle:
             for row in file:
                 data.append(row)
         if not data:
-            raise ValueError("Отсутсвуют данные в файле")
+            raise ValueError("Found nothing in file")
         size, puzzle = self._read_puzzle(data)
         return size, puzzle
 
@@ -50,40 +52,45 @@ class GetPuzzle:
                 row = row[:row.index('#')]
             if row:
                 data.append(row.strip())
-
+        data = [val for val in data if val]
+        res = []
+        for val in data:
+            res.extend(val.split(' '))
+        data = res
         if data:
             size = data.pop(0)
+            print(data)
             if isinstance(size, str) and size.isdigit():
                 size = int(size)
             else:
-                raise ValueError("Значение размера должно быть целым числом")
+                raise ValueError("Size have to be integer")
 
             puzzle = self.__convert_list_to_int(data)
             self._check_symbols(size, puzzle)
             return size, puzzle
-        raise ValueError("Переданы некорректные данные. Не обнаружены цифры.")
+        raise ValueError("Where is the integers?")
 
     @staticmethod
     def __convert_list_to_int(array: List[str]) -> List[int]:
         try:
             res = [int(i) for i in array]
         except ValueError:
-            raise ValueError("В пазле обнаружен не валидный элемент. Ожидается набор целых чисел")
+            raise ValueError("Only ints allowed in puzzle")
         return res
 
     @staticmethod
     def _check_symbols(size: int, puzzle: List[Union[int, str]]) -> None:
 
         if size is None or not isinstance(size, int):
-            raise ValueError("Значение размера должно быть целым числом")
+            raise ValueError("Only int allowed")
         if size < 2:
-            raise ValueError("Значение size должно быть больше 1")
+            raise ValueError("Size value have to be more than 1")
 
         valid_puzzle = [i for i in range(size * size)]
         if sorted(puzzle) != valid_puzzle:
-            raise ValueError("Подан некорректный пазл. Проверьте символы и их колличество. "
-                             "Значения пазла дожны раполагаться в интервале [0, size*size - 1]."
-                             " Повторы чисел недопустимы.")
+            raise ValueError("This puzzle is wrong. Check symbols and it's count. "
+                             "Values in puzzle have to be in range [0, size*size - 1]."
+                             " Repeats are unacceptable.")
 
 
 class HandleResult:
@@ -160,7 +167,7 @@ def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int]]:
     try:
         size, puzzle = GetPuzzle().get_puzzle(args)
     except (ValueError, BrokenPipeError) as e:
-        print(e, " \nЗавершаем работу приложения.")
+        print(e, " \nThis is the end.")
         error = True
     finally:
         if not sys.stdin.isatty():
@@ -175,11 +182,12 @@ def main():
 
     args = activate_tty()
     size, puzzle = read_puzzle(args)
-    if not is_solvable(puzzle):
-        print(f"Паззл '{', '.join([str(i) for i in puzzle])}' не имеет решения."
-              f"\nЗавершаем работу приложения")
-        exit()
-
+    HandleResult(puzzle, size)._print_puzzle(puzzle)
+    # if not is_solvable(puzzle):
+    #     print(f"Puzzle '{puzzle}' have no solution."
+    #           f"\nThis is the end")
+    #     exit()
+    print('start')
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
 

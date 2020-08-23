@@ -1,32 +1,64 @@
 from n_puzzle.puzzle import Puzzle
 from n_puzzle.get_neighbours import get_neighbours
 
-import heapq
-from typing import Callable, List
+from heapq import heappop, heappush
+from typing import Callable, Optional
 
 
-def a_star(current_config: Puzzle, heuristic: Callable):
-    visited = {hash(current_config): current_config}
-    priority_q = []
-    heapq.heapify(priority_q)
-    current_config.h = heuristic(current_config)
-    if not current_config.h:
-        return current_config
+def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
+    opened = []
 
-    while heuristic(current_config):
-        for neighbour in get_neighbours(current_config):
+    current.h = heuristic(current)
+    if not current.h:
+        return current
+    heappush(opened, current)
 
-            permutation_id = hash(neighbour)
-            if permutation_id not in visited:
-                neighbour.h = heuristic(neighbour)
+    closed = {}
 
-                if not neighbour.h:
-                    return neighbour
+    while opened:
 
-                heapq.heappush(priority_q, neighbour)
-            elif current_config.g + 1 < visited[permutation_id].g:
-                visited[permutation_id].g = current_config.g + 1
-                visited[permutation_id].parent = current_config
+        current = heappop(opened)
+        current_id = current.hash
+        closed[current_id] = current
 
-        current_config = heapq.heappop(priority_q)
-        visited[hash(current_config)] = current_config
+        for neighbour in get_neighbours(current):
+            neighbour_id = neighbour.hash
+            neighbour.h = heuristic(neighbour)
+            if not neighbour.h:
+                return neighbour
+
+            if neighbour_id in closed:
+                if neighbour.g >= closed[neighbour_id].g:
+                    continue
+                closed[neighbour_id].g = current.g + 1
+                closed[neighbour_id].parent = current
+            if neighbour not in opened:
+                heappush(opened, neighbour)
+    raise ValueError("SOLUTION DIN't FOUND?!!!")
+
+    # opened = []
+    # closed = {current.hash: current}
+    # current.h = heuristic(current)
+    # if not current.h:
+    #     return current
+    #
+    # heappush(opened, current)
+    #
+    # while opened:
+    #
+    #     current = heappop(opened)
+    #     closed[current.hash] = current
+    #
+    #     for neighbour in get_neighbours(current):
+    #
+    #         neighbour_id = hash(neighbour)
+    #         if neighbour_id not in closed:
+    #             neighbour.h = heuristic(neighbour)
+    #
+    #             if not neighbour.h:
+    #                 return neighbour
+    #
+    #             heappush(opened, neighbour)
+    #         elif current.g + 1 < closed[neighbour_id].g:
+    #             closed[neighbour_id].g = current.g + 1
+    #             closed[neighbour_id].parent = current
