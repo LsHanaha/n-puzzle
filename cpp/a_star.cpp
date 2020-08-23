@@ -40,13 +40,14 @@ pop(puzzle_q& q)
 }
 
 std::string
-a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
+a_star(Puzzle *current_config, const puzzle_config_t& goal,
+		int (*euristic)(const Puzzle *puzzle, const puzzle_config_t& goal))
 {
 	puzzle_map	visited;
 	puzzle_q	q;
 	Puzzle		*found_elem;
 
-	while (euristic(current_config))
+	while (euristic(current_config, goal))
 	{
 		if ((found_elem = is_in(current_config, visited)))
 		{
@@ -60,7 +61,7 @@ a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle))
 		{
 			if (!(found_elem = is_in(neighbour, visited)))
 			{
-				neighbour->h = euristic(neighbour);
+				neighbour->h = euristic(neighbour, goal);
 				q.push(neighbour);
 			}
 			else

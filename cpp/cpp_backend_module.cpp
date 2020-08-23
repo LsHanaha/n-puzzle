@@ -2,10 +2,10 @@
 #include <Python.h>
 #include "n_puzzle.hpp"
 
-static char	*call_backend(int side_len, int *array, char *euristic)
+static char	*call_backend(int side_len, int *map_array, int *goal_array, char *euristic)
 {
 	std::string	euristic_name(euristic);
-	int (*euristic_fun)(const Puzzle *puzzle);
+	int (*euristic_fun)(const Puzzle*, const puzzle_config_t&);
 	if (euristic_name == "hemming")
 		euristic_fun = hemming;
 	else if (euristic_name == "manhattan")
@@ -19,12 +19,13 @@ static char	*call_backend(int side_len, int *array, char *euristic)
 	else if (euristic_name == "greedy_manhattan")
 		euristic_fun = greedy_manhattan;
 	else
-		throw std::runtime_error("Unknown euristic");
+		throw std::invalid_argument("Unknown euristic");
 
 	Puzzle::set_side_len(side_len);
-	std::vector<int>	map(array, array + side_len * side_len);
+	puzzle_config_t	map(map_array, map_array + side_len * side_len);
+	puzzle_config_t goal(goal_array, goal_array + side_len * side_len);
 	Puzzle	*config = new Puzzle(map);
-	return strdup(a_star(config, euristic_fun).c_str());
+	return strdup(a_star(config, goal, euristic_fun).c_str());
 }
 
 extern "C"
@@ -35,21 +36,27 @@ static PyObject *solve(PyObject *self, PyObject *args)
 {
 	int			side_len;
     PyObject	*py_map;
-	int			*cpp_map;
+	PyObject	*py_goal;
 	char		*euristic;
-	int			map_len;
 
-    if (!PyArg_ParseTuple(args, "iOs", &side_len, &py_map, &euristic))
+    if (!PyArg_ParseTuple(args, "iOOs", &side_len, &py_map, &py_goal, &euristic))
         return (NULL);
-	map_len = PyObject_Length(py_map);
-	if (!(cpp_map = (int *)malloc(sizeof(int) * map_len)))
-		return (NULL);
-	for (int i = 0; i < map_len; ++i)
-		cpp_map[i] = PyLong_AsLong(PyList_GetItem(py_map, i));
 
-	char		*cpp_out = call_backend(side_len, cpp_map, euristic);
+	int map_len = PyObject_Length(py_map);
+	int *cpp_map = (int *)malloc(sizeof(int) * map_len);
+	int *goal_map = (int *)malloc(sizeof(int) * map_len);
+	if (!cpp_map || !goal_map)
+		return (PyErr_Format(PyExc_MemoryError, "Out of memory, get more RAM!"));
+	for (int i = 0; i < map_len; ++i)
+	{
+		cpp_map[i] = PyLong_AsLong(PyList_GetItem(py_map, i));
+		goal_map[i] = PyLong_AsLong(PyList_GetItem(py_goal, i));
+	}
+
+	char		*cpp_out = call_backend(side_len, cpp_map, goal_map, euristic);
 	PyObject	*py_out = Py_BuildValue("s", cpp_out, euristic);
 	free(cpp_map);
+	free(goal_map);
 	free(cpp_out);
 	return py_out;
 }

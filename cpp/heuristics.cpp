@@ -1,12 +1,10 @@
 #include "n_puzzle.hpp"
 
-#include <iostream>
-
-int	hemming(const Puzzle *puzzle)
+int	hemming(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	int out = 0;
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += (puzzle->map[i] != i);
+		out += (puzzle->map[i] != goal[i]);
 	return (out);
 }
 
@@ -16,17 +14,21 @@ inline static int get_manhattan_score(int map_i, int i, int side_len)
 			+ abs(map_i % side_len - i % side_len);
 }
 
-int	manhattan(const Puzzle *puzzle)
+int	manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	int out = 0;
 
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
+		out += get_manhattan_score(puzzle->map[i], goal[i], Puzzle::side_len);
 	return (out);
 }
 
-int	phased_manhattan(const Puzzle *puzzle)
+int	phased_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
+/*
+	This heuristic is only intended for a classic n-puzzle.
+*/
 {
+	(void)goal;
 	int out = 0;
 
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
@@ -58,7 +60,10 @@ static void init_weights(std::vector<int>& weights)
 	}
 }
 
-int	rowwise_manhattan(const Puzzle *puzzle)
+int	rowwise_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
+/*
+	This heuristic is only intended for a classic n-puzzle.
+*/
 {
 	int out = 0;
 	static std::vector<int> weights;
@@ -66,23 +71,23 @@ int	rowwise_manhattan(const Puzzle *puzzle)
 	if (!weights.size())
 		init_weights(weights);
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * weights[puzzle->map[i]];
+		out += get_manhattan_score(puzzle->map[i], goal[i], Puzzle::side_len) * weights[puzzle->map[i]];
 	return out;
 }
 
-int	uniform(const Puzzle *puzzle)
+int	uniform(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		if (puzzle->map[i] != i)
+		if (puzzle->map[i] != goal[i])
 			return (1);
 	return (0);
 }
 
-int	greedy_manhattan(const Puzzle *puzzle)
+int	greedy_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	//hacky-hacky.
 	uintptr_t addr = reinterpret_cast<uintptr_t>(puzzle);
 	Puzzle* deconst = reinterpret_cast<Puzzle*>(addr);
 	deconst->g = 0;
-	return manhattan(puzzle);
+	return manhattan(puzzle, goal);
 }

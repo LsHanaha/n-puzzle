@@ -15,16 +15,17 @@ bool    lt(const Puzzle *a, const Puzzle *b);
 
 std::vector<Puzzle*>    *get_neighbours(Puzzle *current);
 
-std::string a_star(Puzzle *current_config, int (*euristic)(const Puzzle *puzzle));
+std::string a_star(Puzzle *current_config, const puzzle_config_t& goal,
+		int (*euristic)(const Puzzle *puzzle, const puzzle_config_t& goal));
 
 std::string get_sequence(Puzzle *solution);
 
-int	hemming(const Puzzle *puzzle);
-int	manhattan(const Puzzle *puzzle);
-int	phased_manhattan(const Puzzle *puzzle);
-int	rowwise_manhattan(const Puzzle *puzzle);
+int	hemming(const Puzzle *puzzle, const puzzle_config_t& goal);
+int	manhattan(const Puzzle *puzzle, const puzzle_config_t& goal);
+int	phased_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal);
+int	rowwise_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal);
 
-int	uniform(const Puzzle *puzzle);
-int	greedy_manhattan(const Puzzle *puzzle);
+int	uniform(const Puzzle *puzzle, const puzzle_config_t& goal);
+int	greedy_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal);
 
 #endif
