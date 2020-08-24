@@ -4,7 +4,7 @@ from typing import List, Dict
 
 
 def count_inversions(puzzle: List[int], goal: List[int], side_len: int) -> int:
-    
+
     res = 0
     size = side_len * side_len
     for i in range(size - 1):
@@ -34,3 +34,4 @@ def is_solvable(puzzle: List[int], goal: List[int], side_len: int) -> bool:
     if not (dist + inversions) % 2:
         return True
     return False
+    # return not (dist + inversions) % 2 ?

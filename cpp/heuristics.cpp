@@ -4,22 +4,25 @@ int	hemming(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	int out = 0;
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += (puzzle->map[i] != goal[i]);
+		out += (i != goal[puzzle->map[i]]);
 	return (out);
 }
 
-inline static int get_manhattan_score(int map_i, int i, int side_len)
+inline static int get_manhattan_score(int i, int j, int side_len)
+/*
+	Returns the number of steps to move from position i to position j.
+*/
 {
-	return abs(map_i / side_len - i / side_len)
-			+ abs(map_i % side_len - i % side_len);
+	return abs(i / side_len - j / side_len) + abs(i % side_len - j % side_len);
 }
 
 int	manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	int out = 0;
+	int size = puzzle->map.size();
 
-	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += get_manhattan_score(puzzle->map[i], goal[i], Puzzle::side_len);
+	for (int i = 0; i < size; ++i)
+		out += get_manhattan_score(i, goal[puzzle->map[i]], Puzzle::side_len);
 	return (out);
 }
 
@@ -28,17 +31,16 @@ int	phased_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
 	This heuristic is only intended for a classic n-puzzle.
 */
 {
-	(void)goal;
 	int out = 0;
 
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
 	{
 		if (puzzle->map[i] < Puzzle::side_len * (Puzzle::side_len - 2))
-			out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * 4;
+			out += get_manhattan_score(goal[puzzle->map[i]], i, Puzzle::side_len) * 4;
 		else if (puzzle->map[i] % Puzzle::side_len < Puzzle::side_len - 2)
-			out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len) * 2;
+			out += get_manhattan_score(goal[puzzle->map[i]], i, Puzzle::side_len) * 2;
 		else
-			out += get_manhattan_score(puzzle->map[i], i, Puzzle::side_len);
+			out += get_manhattan_score(goal[puzzle->map[i]], i, Puzzle::side_len);
 	}
 	return out;
 }
@@ -71,14 +73,14 @@ int	rowwise_manhattan(const Puzzle *puzzle, const puzzle_config_t& goal)
 	if (!weights.size())
 		init_weights(weights);
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		out += get_manhattan_score(puzzle->map[i], goal[i], Puzzle::side_len) * weights[puzzle->map[i]];
+		out += get_manhattan_score(goal[puzzle->map[i]], i, Puzzle::side_len) * weights[puzzle->map[i]];
 	return out;
 }
 
 int	uniform(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	for (int i = 0; i < static_cast<int>(puzzle->map.size()); ++i)
-		if (puzzle->map[i] != goal[i])
+		if (goal[puzzle->map[i]] != i)
 			return (1);
 	return (0);
 }
