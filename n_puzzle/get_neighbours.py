@@ -15,7 +15,7 @@ def get_neighbours(parent: Puzzle) -> List[Puzzle]:
     top - left - right - bottom
     """
     result = []
-    zero_id = parent.board.index(parent.puzzle_len - 1)
+    zero_id = parent.board.index(0)
 
     if zero_id - parent.side_len >= 0:
         new_map = _cook_new_map(parent, zero_id, zero_id - parent.side_len)

@@ -3,19 +3,17 @@ from math import sqrt
 from typing import List, Dict
 
 
-
 def count_inversions(puzzle: List[int], goal: List[int], side_len: int) -> int:
     
     res = 0
     size = side_len * side_len
     for i in range(size - 1):
-        for j in range(i + 1, size):            
+        for j in range(i + 1, size):
                 pi = puzzle[i]
                 pj = puzzle[j]
                 if goal.index(pi) > goal.index(pj):
                     res += 1
     return res
-
 
 
 def get_manhattan_score(puzzle: List[int], goal: List[int], side_len: int) -> int:

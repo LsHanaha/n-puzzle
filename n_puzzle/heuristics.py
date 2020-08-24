@@ -1,19 +1,22 @@
 from n_puzzle.puzzle import Puzzle
 
 
+target_indexes = []
+target_map = []
+
+
 def hemming(puzzle: Puzzle) -> int:
     out = 0
     for i, elem in enumerate(puzzle.board):
-        out += int(elem != i)
+        out += int(elem != target_map[i])
     return out
 
 
 def get_manhattan_score(side_len: int, elem: int, i: int) -> int:
-    current_x = i // side_len
-    current_y = i % side_len
-    gold_x = elem // side_len
-    gold_y = elem % side_len
-    return abs(gold_x - current_x) + abs(gold_y - current_y)
+    current_y = i // side_len
+    current_x = i % side_len
+    goal_y, goal_x = target_indexes[elem]
+    return abs(goal_x - current_x) + abs(goal_y - current_y)
 
 
 def manhattan(puzzle: Puzzle) -> int:

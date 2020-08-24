@@ -2,12 +2,11 @@ from n_puzzle.puzzle import Puzzle
 from n_puzzle.get_neighbours import get_neighbours
 
 from heapq import heappop, heappush
-from typing import Callable, Optional, List, Tuple
+from typing import Callable, Optional
 
 
-def a_star(current: Puzzle, goal: List[Tuple[int, int]], heuristic: Callable) -> Optional[Puzzle]:
+def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
     opened = []
-
     current.h = heuristic(current)
     if not current.h:
         return current
@@ -24,6 +23,7 @@ def a_star(current: Puzzle, goal: List[Tuple[int, int]], heuristic: Callable) ->
         for neighbour in get_neighbours(current):
             neighbour_id = neighbour.hash
             neighbour.h = heuristic(neighbour)
+
             if not neighbour.h:
                 return neighbour
 

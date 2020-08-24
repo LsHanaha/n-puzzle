@@ -3,7 +3,7 @@ import sys
 from typing import Optional, List, Tuple, Union
 from puzzle_checker import is_solvable
 from n_puzzle.solve_puzzle import Solver
-
+import cProfile
 
 class GetPuzzle:
 

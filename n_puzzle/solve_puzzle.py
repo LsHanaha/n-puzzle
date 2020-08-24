@@ -1,9 +1,9 @@
 from typing import List, Callable, Tuple
 from n_puzzle.heuristics import manhattan, hemming, phased_manh, \
-    rowwise_manhattan, uniform
+    rowwise_manhattan, uniform, target_indexes, target_map
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
-from n_puzzle.converters import converter, convert_to_indexes
+from n_puzzle.converters import convert_to_indexes
 
 
 class Solver:
@@ -14,7 +14,7 @@ class Solver:
     def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int]) -> str:
         converted_goal = self._convert_goal_to_indexes(goal, size)
         backend = self._select_backend()
-        res = backend(self._heuristic).solve_puzzle(size, puzzle, converted_goal)
+        res = backend(self._heuristic).solve_puzzle(size, puzzle, converted_goal, goal)
         return res
 
     @staticmethod
@@ -33,8 +33,13 @@ class PythonBackend:
     def __init__(self, heu):
         self._heuristic = heu
 
-    def solve_puzzle(self, size: int, puzzle: List[int], goal: List[Tuple[int, int]]) -> str:
+    def solve_puzzle(self, size: int, puzzle: List[int], goal: List[Tuple[int, int]],
+                     goal_map: List[int]) -> str:
         heuristic = self._select_heuristic()
+        # так грязно...
+        target_map.extend(goal_map)
+        target_indexes.extend(goal)
+
         res = self._start_a_star(size, puzzle, goal, heuristic)
         return res
 
@@ -55,7 +60,7 @@ class PythonBackend:
         Puzzle.set_side_len(size)
         Puzzle.set_puzzle_len(size*size)
         puzzle = Puzzle(puzzle, g=0, h=None, parent=None)
-        finish_state = a_star(puzzle, goal, heuristic)
+        finish_state = a_star(puzzle, heuristic)
         res = self._restore_path(finish_state)
         return res
 

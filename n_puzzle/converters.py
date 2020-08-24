@@ -18,4 +18,5 @@ def convert_to_indexes(puzzle: list, side_len: int) -> List[Tuple[int, int]]:
     res = [tuple() for _ in range(side_len * side_len)]
     for i, val in enumerate(puzzle):
         res[val] = (i // side_len, i % side_len)
+    print(res)
     return res
