@@ -64,7 +64,7 @@ def rowwise_manhattan(puzzle: Puzzle):
 def uniform(puzzle: Puzzle) -> int:
 
     for i in range(puzzle.puzzle_len):
-        if puzzle.board[i] != i:
+        if puzzle.board[i] != target_map[i]:
             return 1
     return 0
 

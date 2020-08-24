@@ -1,6 +1,6 @@
 from typing import List, Callable, Tuple
 from n_puzzle.heuristics import manhattan, hemming, phased_manh, \
-    rowwise_manhattan, uniform, target_indexes, target_map
+    rowwise_manhattan, uniform, greedy, target_indexes, target_map
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
 from n_puzzle.converters import convert_to_indexes
@@ -50,7 +50,7 @@ class PythonBackend:
             'heim': hemming,
             'super': phased_manh,
             'best': rowwise_manhattan,
-            'greedy': None,
+            'greedy': greedy,
             'yolo': uniform
         }
         return heuristic.get(self._heuristic)

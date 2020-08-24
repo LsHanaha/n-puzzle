@@ -3,7 +3,9 @@ import sys
 from typing import Optional, List, Tuple, Union
 from puzzle_checker import is_solvable
 from n_puzzle.solve_puzzle import Solver
+from n_puzzle.errors import BoardError
 import cProfile
+
 
 class GetPuzzle:
 
@@ -24,7 +26,7 @@ class GetPuzzle:
             data.append(row)
         print("pipe = ", data)
         if not data:
-            raise BrokenPipeError("Found nothing in Pipe")
+            raise BoardError("Found nothing in Pipe")
         size, puzzle = self._read_puzzle(data)
         return size, puzzle
 
@@ -36,7 +38,7 @@ class GetPuzzle:
             for row in file:
                 data.append(row)
         if not data:
-            raise ValueError("Found nothing in file")
+            raise BoardError("Found nothing in file")
         size, puzzle = self._read_puzzle(data)
         return size, puzzle
 
@@ -64,12 +66,12 @@ class GetPuzzle:
             if isinstance(size, str) and size.isdigit():
                 size = int(size)
             else:
-                raise ValueError("Size have to be integer")
+                raise BoardError("Size have to be integer")
 
             puzzle = self.__convert_list_to_int(data)
             self._check_symbols(size, puzzle)
             return size, puzzle
-        raise ValueError("Where is the integers?")
+        raise BoardError("Where is the integers?")
 
     def get_goal(self,  args: argparse.Namespace, size: int) -> List[int]:
         goal = args.goal
@@ -83,21 +85,21 @@ class GetPuzzle:
     def __convert_list_to_int(array: List[str]) -> List[int]:
         try:
             res = [int(i) for i in array]
-        except ValueError:
-            raise ValueError("Only ints allowed in puzzle")
+        except BoardError:
+            raise BoardError("Only ints allowed in puzzle")
         return res
 
     @staticmethod
     def _check_symbols(size: int, puzzle: List[Union[int, str]], target: str = 'puzzle') -> None:
 
         if size is None or not isinstance(size, int):
-            raise ValueError("Only int allowed")
+            raise BoardError("Only int allowed")
         if size < 2:
-            raise ValueError("Size value have to be more than 1")
+            raise BoardError("Size value have to be more than 1")
 
         valid_puzzle = [i for i in range(size * size)]
         if sorted(puzzle) != valid_puzzle:
-            raise ValueError(f"This {target} is wrong. Check symbols and it's count. "
+            raise BoardError(f"This {target} is wrong. Check symbols and it's count. "
                              f"Values in {target} have to be in range [0, size*size - 1]."
                              f" Repeats are unacceptable.")
 
@@ -229,4 +231,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BoardError as e:
+        print(e)
+        print('This is the end')
