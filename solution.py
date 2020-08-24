@@ -2,13 +2,12 @@ import argparse
 import sys
 from typing import Optional, List, Tuple, Union
 from puzzle_checker import is_solvable
-from n_puzzle.converters import converter, convert_to_indexes
 from n_puzzle.solve_puzzle import Solver
 
 
 class GetPuzzle:
 
-    def get_puzzle(self, args: argparse.Namespace) -> Tuple[int, List[int]]:
+    def get_puzzle(self, args: argparse.Namespace) -> Tuple[int, List[int], List[int]]:
         if args.puzzle:
             size, puzzle = self._read_args(args)
         elif args.file:
@@ -103,7 +102,8 @@ class GetPuzzle:
                              f" Repeats are unacceptable.")
 
     @staticmethod
-    def _get_default_goal(size: int):
+    def _get_default_goal(size: int) -> List[int]:
+        # TODO ADD default value generator
         if size == 2:
             goal = [1, 2, 4, 3]
         elif size == 3:
@@ -111,12 +111,12 @@ class GetPuzzle:
         elif size == 4:
             goal = [1, 2, 3, 4, 12, 13, 14, 5, 11, 0, 15, 6, 10, 9, 8, 7]
         elif size == 5:
-            goal = [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 0, 20, 7, 14, 23, 22, 21, 
-            8, 13, 12, 11, 10, 9]
+            goal = [1, 2, 3, 4, 5, 16, 17, 18, 19, 6, 15, 24, 0, 20, 7, 14, 23, 22, 21,
+                    8, 13, 12, 11, 10, 9]
         elif size == 6:
-            pass
+            goal = None
         else:
-            pass
+            goal = None
         return goal
 
 
@@ -130,15 +130,15 @@ class HandleResult:
         if not quiet:
             print('=' * (self._size * 4))
             print("Start config:")
-            self._print_puzzle(self._start)
+            self.print_puzzle(self._start)
             step = self._start
 
             for move in solution:
                 print(move)
                 step, switch = self._move_empty_square(step, move)
-                self._print_puzzle(step, switch)
+                self.print_puzzle(step, switch)
 
-    def _print_puzzle(self, puzzle: List[int], switch: Optional[int] = None):
+    def print_puzzle(self, puzzle: List[int], switch: Optional[int] = None):
         for i, val in enumerate(puzzle):
             if not val:
                 print('\033[31m{:2}\033[0m'.format(val), end=" ")
@@ -165,11 +165,11 @@ class HandleResult:
 
 def activate_tty():
     parser = argparse.ArgumentParser(description="Add some arguments or use pipe. It's up to you")
-    parser.add_argument('-s', "--size", type = int, 
+    parser.add_argument('-s', "--size", type=int,
                         help="Length of your puzzle side")
     parser.add_argument("-p", "--puzzle", type=int, nargs='+',
                         help="Puzzle himself")
-    parser.add_argument('-g', "--goal", type = int, nargs='+', default=None,
+    parser.add_argument('-g', "--goal", type=int, nargs='+', default=None,
                         help="It's goal configuration of puzzle. Snail as default")
     parser.add_argument("-f", "--file", type=str, default=False,
                         help="Read puzzle from file")
@@ -207,12 +207,19 @@ def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int], List[int]]:
     return size, puzzle, goal
 
 
+def show_task_info(puzzle: List[int], goal: List[int], size: int) -> None:
+    print('Incoming puzzle: ')
+    HandleResult(puzzle, size).print_puzzle(puzzle)
+    print('Goal target: ')
+    HandleResult(goal, size).print_puzzle(goal)
+
+
 def main():
 
     args = activate_tty()
     size, puzzle, goal = read_puzzle(args)
-    # TODO remove
-    HandleResult(puzzle, size)._print_puzzle(puzzle)
+    if not (args.q or args.v):
+        show_task_info(puzzle, goal, size)
     if not is_solvable(puzzle, goal, size):
         print(f"Puzzle '{puzzle}' have no solution."
               f"\nThis is the end")

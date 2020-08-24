@@ -9,32 +9,33 @@ from n_puzzle.converters import converter, convert_to_indexes
 class Solver:
     def __init__(self, heuristic, backend):
         self._heuristic = heuristic
-        self.backend = backend
-
-
-
+        self._backend = backend
 
     def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int]) -> str:
-        puzzle_converted = converter(puzzle)
-        res = PythonBackend(self._heuristic).solve_puzzle(size, puzzle_converted)
+        converted_goal = self._convert_goal_to_indexes(goal, size)
+        backend = self._select_backend()
+        res = backend(self._heuristic).solve_puzzle(size, puzzle, converted_goal)
         return res
 
-    def _convert_goal_to_indexes(self, puzzle: List[int], size: int) -> List[Tuple[int, int]]:
-
+    @staticmethod
+    def _convert_goal_to_indexes(puzzle: List[int], size: int) -> List[Tuple[int, int]]:
         goal = convert_to_indexes(puzzle, size)
         return goal
 
-    def select_backend(self):
-        pass
+    def _select_backend(self):
+        if self._backend:
+            pass  # TODO cpp here
+        else:
+            return PythonBackend
 
 
 class PythonBackend:
     def __init__(self, heu):
         self._heuristic = heu
 
-    def solve_puzzle(self, size: int, puzzle: List[int]):
+    def solve_puzzle(self, size: int, puzzle: List[int], goal: List[Tuple[int, int]]) -> str:
         heuristic = self._select_heuristic()
-        res = self._start_a_star(size, puzzle, heuristic)
+        res = self._start_a_star(size, puzzle, goal, heuristic)
         return res
 
     def _select_heuristic(self):
@@ -49,11 +50,12 @@ class PythonBackend:
         }
         return heuristic.get(self._heuristic)
 
-    def _start_a_star(self, size: int, puzzle: List[int], heuristic: Callable):
+    def _start_a_star(self, size: int, puzzle: List[int], goal: List[Tuple[int, int]],
+                      heuristic: Callable):
         Puzzle.set_side_len(size)
         Puzzle.set_puzzle_len(size*size)
         puzzle = Puzzle(puzzle, g=0, h=None, parent=None)
-        finish_state = a_star(puzzle, heuristic)
+        finish_state = a_star(puzzle, goal, heuristic)
         res = self._restore_path(finish_state)
         return res
 

@@ -2,10 +2,10 @@ from n_puzzle.puzzle import Puzzle
 from n_puzzle.get_neighbours import get_neighbours
 
 from heapq import heappop, heappush
-from typing import Callable, Optional
+from typing import Callable, Optional, List, Tuple
 
 
-def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
+def a_star(current: Puzzle, goal: List[Tuple[int, int]], heuristic: Callable) -> Optional[Puzzle]:
     opened = []
 
     current.h = heuristic(current)
@@ -35,30 +35,3 @@ def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
             if neighbour not in opened:
                 heappush(opened, neighbour)
     raise ValueError("SOLUTION DIN't FOUND?!!!")
-
-    # opened = []
-    # closed = {current.hash: current}
-    # current.h = heuristic(current)
-    # if not current.h:
-    #     return current
-    #
-    # heappush(opened, current)
-    #
-    # while opened:
-    #
-    #     current = heappop(opened)
-    #     closed[current.hash] = current
-    #
-    #     for neighbour in get_neighbours(current):
-    #
-    #         neighbour_id = hash(neighbour)
-    #         if neighbour_id not in closed:
-    #             neighbour.h = heuristic(neighbour)
-    #
-    #             if not neighbour.h:
-    #                 return neighbour
-    #
-    #             heappush(opened, neighbour)
-    #         elif current.g + 1 < closed[neighbour_id].g:
-    #             closed[neighbour_id].g = current.g + 1
-    #             closed[neighbour_id].parent = current
