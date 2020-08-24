@@ -1,5 +1,5 @@
 from typing import List, Callable, Tuple
-from n_puzzle.heuristics import manhattan, hemming, phased_manh, \
+from n_puzzle.heuristics import manhattan, hamming, phased_manh, \
     rowwise_manhattan, uniform, greedy, target_indexes, target_map
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
@@ -47,7 +47,7 @@ class PythonBackend:
 
         heuristic = {
             "manh": manhattan,
-            'heim': hemming,
+            'hamm': hamming,
             'super': phased_manh,
             'best': rowwise_manhattan,
             'greedy': greedy,

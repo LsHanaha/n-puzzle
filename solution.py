@@ -181,10 +181,10 @@ def activate_tty():
                         help="Activate advanced output information.")
     parser.add_argument("--cpp", default=False, action="store_true",
                         help="Activate c++ backend.")
-    parser.add_argument("--he", type=str, default='manh', choices=['manh', 'heim', 'super',
+    parser.add_argument("--he", type=str, default='manh', choices=['manh', 'hamm', 'super',
                                                                    'best', 'greedy', 'yolo'],
                         help="Choose heuristic for solution. Default is simple manhattan. "
-                             "Available:\n manh - manhattan(default);\nheim - Haimling;\n"
+                             "Available:\n manh - manhattan(default);\nhamm - Haimling;\n"
                              "super - upgraded manhattan;\nbest - the best manhattan;\n"
                              "greedy - activate greedy mode;\nyolo - fuck mandatory, cause yolo!;")
 

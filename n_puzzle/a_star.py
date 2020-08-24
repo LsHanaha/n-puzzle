@@ -9,6 +9,7 @@ from typing import Callable, Optional
 def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
     opened = []
     current.h = heuristic(current)
+    werty = 9999
     if not current.h:
         return current
     heappush(opened, current)
@@ -16,16 +17,19 @@ def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
     closed = {}
     if current in opened:
         print("YEP!")
-
+    print("START heuristics = ", current.h)
     while opened:
 
         current = heappop(opened)
         current_id = current.hash
         closed[current_id] = current
-
         for neighbour in get_neighbours(current):
             neighbour_id = neighbour.hash
             neighbour.h = heuristic(neighbour)
+            if neighbour.h < werty or neighbour.h <= 5:
+                print(neighbour.h)
+                werty = neighbour.h
+                print(neighbour.board)
 
             if not neighbour.h:
                 return neighbour

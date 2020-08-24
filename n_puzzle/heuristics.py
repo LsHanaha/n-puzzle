@@ -5,9 +5,11 @@ target_indexes = []
 target_map = []
 
 
-def hemming(puzzle: Puzzle) -> int:
+def hamming(puzzle: Puzzle) -> int:
     out = 0
     for i, elem in enumerate(puzzle.board):
+        if not elem:
+            continue
         out += int(elem != target_map[i])
     return out
 
@@ -22,6 +24,8 @@ def get_manhattan_score(side_len: int, elem: int, i: int) -> int:
 def manhattan(puzzle: Puzzle) -> int:
     out = 0
     for i, elem in enumerate(puzzle.board):
+        if not elem:
+            continue
         out += get_manhattan_score(puzzle.side_len, elem, i)
     return out
 
