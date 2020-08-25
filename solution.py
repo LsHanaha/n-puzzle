@@ -185,8 +185,9 @@ def activate_tty():
                                                                    'best', 'greedy', 'yolo'],
                         help="Choose heuristic for solution. Default is simple manhattan. "
                              "Available:\n manh - manhattan(default);\nhamm - Haimling;\n"
-                             "super - upgraded manhattan;\nbest - the best manhattan;\n"
-                             "greedy - activate greedy mode;\nyolo - fuck mandatory, cause yolo!;")
+                             "super - phased manhattan;\nbest - rowwise manhattan;\n"
+                             "greedy - activate greedy mode;\nyolo - fuck the mandatory, "
+                             "cause yolo!;")
 
     args = parser.parse_args()
     return args
@@ -222,10 +223,10 @@ def main():
     size, puzzle, goal = read_puzzle(args)
     if not (args.q or args.v):
         show_task_info(puzzle, goal, size)
-    # if not is_solvable(puzzle, goal, size):
-    #     print(f"Puzzle '{puzzle}' have no solution."
-    #           f"\nThis is the end")
-    #     exit()
+    if not is_solvable(puzzle, goal, size):
+        print(f"Puzzle '{puzzle}' have no solution."
+              f"\nThis is the end")
+        exit()
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
 

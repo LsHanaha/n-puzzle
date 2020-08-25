@@ -7,43 +7,43 @@ from n_puzzle.converters import convert_to_indexes
 
 
 class Solver:
-    def __init__(self, heuristic, backend):
+    def __init__(self, heuristic: str, is_cpp: bool):
         self._heuristic = heuristic
-        self._backend = backend
+        self._backend = self.__select_backend(is_cpp)
+
+    @staticmethod
+    def __select_backend(is_cpp):
+        if is_cpp:
+            pass  # TODO cpp here
+        else:
+            return PythonBackend
 
     def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int]) -> str:
-        converted_goal = self._convert_goal_to_indexes(goal, size)
-        backend = self._select_backend()
-        res = backend(self._heuristic).solve_puzzle(size, puzzle, converted_goal, goal)
+        """типа возвращает строку движений lrrruddd..."""
+        res = self._backend().solve_puzzle(size, puzzle, goal, self._heuristic)
         return res
+
+
+class PythonBackend:
 
     @staticmethod
     def _convert_goal_to_indexes(puzzle: List[int], size: int) -> List[Tuple[int, int]]:
         goal = convert_to_indexes(puzzle, size)
         return goal
 
-    def _select_backend(self):
-        if self._backend:
-            pass  # TODO cpp here
-        else:
-            return PythonBackend
+    def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int], heu: str) -> str:
+        heuristic = self._select_heuristic(heu)
 
-
-class PythonBackend:
-    def __init__(self, heu):
-        self._heuristic = heu
-
-    def solve_puzzle(self, size: int, puzzle: List[int], goal: List[Tuple[int, int]],
-                     goal_map: List[int]) -> str:
-        heuristic = self._select_heuristic()
+        goal_indexes = self._convert_goal_to_indexes(goal, size)
         # так грязно...
-        target_map.extend(goal_map)
-        target_indexes.extend(goal)
+        target_map.extend(goal)
+        target_indexes.extend(goal_indexes)
 
-        res = self._start_a_star(size, puzzle, goal, heuristic)
+        res = self._start_a_star(size, puzzle, goal_indexes, heuristic)
         return res
 
-    def _select_heuristic(self):
+    @staticmethod
+    def _select_heuristic(heu: str) -> Callable:
 
         heuristic = {
             "manh": manhattan,
@@ -53,7 +53,7 @@ class PythonBackend:
             'greedy': greedy,
             'yolo': uniform
         }
-        return heuristic.get(self._heuristic)
+        return heuristic.get(heu)
 
     def _start_a_star(self, size: int, puzzle: List[int], goal: List[Tuple[int, int]],
                       heuristic: Callable):
