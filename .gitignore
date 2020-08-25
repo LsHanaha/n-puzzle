@@ -6,3 +6,4 @@ libft/libft_regex/libft_regex.index
 .vscode/launch.json
 *venv*
 *.pyc
+/vizual.py
