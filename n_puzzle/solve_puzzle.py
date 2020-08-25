@@ -4,6 +4,7 @@ from n_puzzle.heuristics import manhattan, hamming, phased_manh, \
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
 from n_puzzle.converters import convert_to_indexes
+import cpp_backend
 
 
 class Solver:
@@ -14,7 +15,7 @@ class Solver:
     @staticmethod
     def __select_backend(is_cpp):
         if is_cpp:
-            pass  # TODO cpp here
+            return CPPBackend
         else:
             return PythonBackend
 
@@ -22,6 +23,26 @@ class Solver:
         """типа возвращает строку движений lrrruddd..."""
         res = self._backend().solve_puzzle(size, puzzle, goal, self._heuristic)
         return res
+
+
+class CPPBackend:
+
+    @staticmethod
+    def convert_notation(puzzle: List[int]) -> List[int]:
+        return [(i - 1) if i else (len(puzzle) - 1) for i in puzzle]
+
+    @staticmethod
+    def encode_goal(puzzle: List[int]) -> List[int]:
+        return [puzzle.index(i) for i in range(len(puzzle))]
+
+    @staticmethod
+    def solve_puzzle(size: int,
+                     puzzle: List[int],
+                     goal: List[int],
+                     heuristic: str) -> str:
+        puzzle = CPPBackend.convert_notation(puzzle)
+        goal = CPPBackend.encode_goal(CPPBackend.convert_notation(goal))
+        return cpp_backend.solve(size, puzzle, goal, heuristic)
 
 
 class PythonBackend:
