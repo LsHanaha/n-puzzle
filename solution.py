@@ -222,10 +222,10 @@ def main():
     size, puzzle, goal = read_puzzle(args)
     if not (args.q or args.v):
         show_task_info(puzzle, goal, size)
-    if not is_solvable(puzzle, goal, size):
-        print(f"Puzzle '{puzzle}' have no solution."
-              f"\nThis is the end")
-        exit()
+    # if not is_solvable(puzzle, goal, size):
+    #     print(f"Puzzle '{puzzle}' have no solution."
+    #           f"\nThis is the end")
+    #     exit()
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
 
@@ -236,3 +236,6 @@ if __name__ == "__main__":
     except BoardError as e:
         print(e)
         print('This is the end')
+
+
+

@@ -1,6 +1,4 @@
-
-from math import sqrt
-from typing import List, Dict
+from typing import List
 
 
 def count_inversions(puzzle: List[int], goal: List[int], side_len: int) -> int:
@@ -9,10 +7,10 @@ def count_inversions(puzzle: List[int], goal: List[int], side_len: int) -> int:
     size = side_len * side_len
     for i in range(size - 1):
         for j in range(i + 1, size):
-                pi = puzzle[i]
-                pj = puzzle[j]
-                if goal.index(pi) > goal.index(pj):
-                    res += 1
+            p_i = puzzle[i]
+            p_j = puzzle[j]
+            if goal.index(p_i) > goal.index(p_j):
+                res += 1
     return res
 
 
@@ -26,7 +24,6 @@ def get_manhattan_score(puzzle: List[int], goal: List[int], side_len: int) -> in
     return dist
 
 
-
 def is_solvable(puzzle: List[int], goal: List[int], side_len: int) -> bool:
 
     inversions = count_inversions(puzzle, goal, side_len)
@@ -34,4 +31,3 @@ def is_solvable(puzzle: List[int], goal: List[int], side_len: int) -> bool:
     if not (dist + inversions) % 2:
         return True
     return False
-    # return not (dist + inversions) % 2 ?
