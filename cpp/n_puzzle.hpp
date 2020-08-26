@@ -2,6 +2,7 @@
 #define N_PUZZLE_HPP
 
 #include "Puzzle.hpp"
+#include <stdexcept>
 #include <string>
 
 class CmpPuzzle // uses gt, as priority_queue sorts by the largest value
