@@ -7,7 +7,8 @@ class HandleResult:
         self._size = size
 
     def show_result(self, solution: str, quiet: bool):
-        print("Solution: ", solution)
+        print("Solution: ", solution or "empty")
+
         if not quiet:
             print('=' * (self._size * 4))
             print("Start config:")
