@@ -13,10 +13,10 @@ class CmpPuzzle // uses gt, as priority_queue sorts by the largest value
 
 bool    lt(const Puzzle *a, const Puzzle *b);
 
-std::vector<Puzzle*>    *get_neighbours(Puzzle *current);
+std::vector<Puzzle*>    get_neighbours(Puzzle *current);
 
 std::string a_star(Puzzle *current_config, const puzzle_config_t& goal,
-		int (*euristic)(const Puzzle *puzzle, const puzzle_config_t& goal));
+		int (*heuristic)(const Puzzle *puzzle, const puzzle_config_t& goal));
 
 std::string get_sequence(Puzzle *solution);
 

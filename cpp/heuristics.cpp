@@ -1,5 +1,7 @@
 #include "n_puzzle.hpp"
 
+int	Puzzle::side_len;
+
 int	hemming(const Puzzle *puzzle, const puzzle_config_t& goal)
 {
 	int out = 0;
