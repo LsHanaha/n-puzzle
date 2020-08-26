@@ -52,7 +52,7 @@ if __name__ == "__main__":
     goal = generators.generate_goal(args.n, args.mode)
     solvable = decide_solvability(args.s, args.u)
     puzzle = generate_puzzle(args.n, goal, solvable)
-    print(f"#This puzzle is {'un' if not solvable else ''}solvable")
+    print(f"# This puzzle is {'un' if not solvable else ''}solvable")
     print(args.n)
     print(*puzzle, sep=" ")
     print(*goal, sep=" ")
