@@ -9,7 +9,7 @@ class HandleResult:
     def show_result(self, solution: str, quiet: bool):
         print("Solution: ", solution or "empty")
 
-        if not quiet:
+        if not quiet and solution:
             print('=' * (self._size * 4))
             print("Start config:")
             self.print_puzzle(self._start)
