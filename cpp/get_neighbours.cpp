@@ -18,20 +18,20 @@ static int	locate_empty_tile(Puzzle *current)
 	throw;
 }
 
-std::vector<Puzzle*>*
+std::vector<Puzzle*>
 get_neighbours(Puzzle *current)
 {
-	std::vector<Puzzle*> *result = new std::vector<Puzzle*>();
+	std::vector<Puzzle*> result;
 	int empty_id = locate_empty_tile(current);
 
 	if (empty_id - Puzzle::side_len >= 0)
-		result->push_back(cook_new_map(current, empty_id, empty_id - Puzzle::side_len));
+		result.push_back(cook_new_map(current, empty_id, empty_id - Puzzle::side_len));
 	if (empty_id % Puzzle::side_len - 1 >= 0)
-		result->push_back(cook_new_map(current, empty_id, empty_id - 1));
+		result.push_back(cook_new_map(current, empty_id, empty_id - 1));
 	if (empty_id % Puzzle::side_len + 1 < Puzzle::side_len)
-		result->push_back(cook_new_map(current, empty_id, empty_id + 1));
+		result.push_back(cook_new_map(current, empty_id, empty_id + 1));
 	if (empty_id + Puzzle::side_len < static_cast<int>(current->map.size()))
-		result->push_back(cook_new_map(current, empty_id, empty_id + Puzzle::side_len));
+		result.push_back(cook_new_map(current, empty_id, empty_id + Puzzle::side_len));
 
 	return result;
 }

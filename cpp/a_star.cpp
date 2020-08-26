@@ -56,8 +56,8 @@ a_star(Puzzle *current_config, const puzzle_config_t& goal,
 			continue;
 		}
 		visited[current_config->get_hash()] = current_config;
-		std::vector<Puzzle*> *neighbours = get_neighbours(current_config);
-		for (Puzzle *neighbour: *neighbours)
+		std::vector<Puzzle*> neighbours = get_neighbours(current_config);
+		for (Puzzle *neighbour: neighbours)
 		{
 			if (!(found_elem = is_in(neighbour, visited)))
 			{
@@ -74,7 +74,6 @@ a_star(Puzzle *current_config, const puzzle_config_t& goal,
 				delete neighbour;
 			}
 		}
-		delete neighbours;
 		current_config = pop(q);
 	}
 	std::cout << "Total states visited:   " << visited.size() << std::endl;
