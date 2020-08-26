@@ -1,2 +1,11 @@
+FILELIST = .cpp_backend_setup.txt
+
 all:
-	cd cpp && python setup.py build --build-lib .. --force
+	python setup.py build install --record $(FILELIST)
+
+clean:
+	python setup.py clean --all
+
+fclean: clean
+	xargs rm -rf < $(FILELIST)
+	rm $(FILELIST)
