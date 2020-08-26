@@ -7,3 +7,4 @@ libft/libft_regex/libft_regex.index
 *venv*
 *.pyc
 /vizual.py
+.vscode/settings.json
