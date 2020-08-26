@@ -5,7 +5,10 @@ from n_puzzle.heuristics import manhattan, hamming, phased_manh, \
 from n_puzzle.a_star import a_star
 from n_puzzle.puzzle import Puzzle
 from n_puzzle.converters import convert_to_indexes
-import cpp_backend
+try:
+    import cpp_backend
+except ModuleNotFoundError:
+    pass
 
 
 class Solver:
