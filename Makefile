@@ -1,2 +1,2 @@
 all:
-	cd cpp && python setup.py build --build-lib ..
+	cd cpp && python setup.py build --build-lib .. --force

@@ -1,3 +1,4 @@
+import sys
 from typing import List, Callable, Tuple
 from n_puzzle.heuristics import manhattan, hamming, phased_manh, \
     rowwise_manhattan, uniform, greedy, target_indexes, target_map
@@ -36,13 +37,31 @@ class CPPBackend:
         return [puzzle.index(i) for i in range(len(puzzle))]
 
     @staticmethod
+    def _select_heuristic(heu: str) -> str:
+        heuristics = {
+            "manhattan": "manhattan",
+            'n_misplaced': "hemming",
+            'phased_manh': "phased_manhattan",
+            'rowwise_manh': "rowwise_manhattan",
+            'greedy_manh': "greedy_manhattan",
+            'uniform': "uniform"
+        }
+        cpp_heu_name = heuristics.get(heu)
+        if cpp_heu_name is None:
+            print("Chosen heuristic is not supported with CPP backend.",
+                  file=sys.stderr)
+            exit(1)
+        return cpp_heu_name
+
+    @staticmethod
     def solve_puzzle(size: int,
                      puzzle: List[int],
                      goal: List[int],
                      heuristic: str) -> str:
         puzzle = CPPBackend.convert_notation(puzzle)
         goal = CPPBackend.encode_goal(CPPBackend.convert_notation(goal))
-        return cpp_backend.solve(size, puzzle, goal, heuristic)
+        return cpp_backend.solve(size, puzzle, goal,
+                                 CPPBackend._select_heuristic(heuristic))
 
 
 class PythonBackend:
@@ -54,6 +73,9 @@ class PythonBackend:
 
     def solve_puzzle(self, size: int, puzzle: List[int], goal: List[int], heu: str) -> str:
         heuristic = self._select_heuristic(heu)
+        if heuristic is None:
+            print("Unknown heuristic", file=sys.stderr)
+            exit(1)
 
         goal_indexes = self._convert_goal_to_indexes(goal, size)
         # так грязно...
@@ -65,14 +87,13 @@ class PythonBackend:
 
     @staticmethod
     def _select_heuristic(heu: str) -> Callable:
-
         heuristic = {
-            "manh": manhattan,
-            'hamm': hamming,
-            'super': phased_manh,
-            'best': rowwise_manhattan,
-            'greedy': greedy,
-            'yolo': uniform
+            "manhattan": manhattan,
+            'n_misplaced': hamming,
+            'phased_manh': phased_manh,
+            'rowwise_manh': rowwise_manhattan,
+            'greedy_manh': greedy,
+            'uniform': uniform
         }
         return heuristic.get(heu)
 
