@@ -130,8 +130,7 @@ def show_task_info(puzzle: List[int], goal: List[int], size: int) -> None:
 if __name__ == "__main__":
     args = parse_args()
     size, puzzle, goal = read_puzzle(args)
-    if not args.q:
-        show_task_info(puzzle, goal, size)
+    show_task_info(puzzle, goal, size)
     if not is_solvable(puzzle, goal, size):
         print("The puzzle has no solution.")
         exit()
