@@ -2,6 +2,7 @@ from n_puzzle.generators import generate_goal
 from n_puzzle.handle_result import HandleResult
 from n_puzzle.solve_puzzle import Solver
 from puzzle_checker import is_solvable
+import custom_visual
 
 import argparse
 import sys
@@ -36,6 +37,7 @@ def parse_args() -> argparse.Namespace:
                                      " stdin. See -h for details.")
 
     parser.add_argument("-q", action="store_true", help="Quiet mode.")
+    parser.add_argument("-v", action="store_true", help="Visual mode.")
 
     parser.add_argument("--cpp", action="store_true",
                         help="Activate c++ backend.")
@@ -134,5 +136,6 @@ if __name__ == "__main__":
     if not is_solvable(puzzle, goal, size):
         print("The puzzle has no solution.")
         exit()
+    custom_visual.BOARD_SIZE = size
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
     HandleResult(puzzle, size).show_result(result, args.q)
