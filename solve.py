@@ -138,4 +138,9 @@ if __name__ == "__main__":
         exit()
     custom_visual.BOARD_SIZE = size
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
-    HandleResult(puzzle, size).show_result(result, args.q)
+    HandleResult(puzzle, size).show_result(result, args.q or args.v)
+    if args.v:
+        # import time
+        # while input() != 'q':
+        #     time.sleep(1)
+        custom_visual.vizual(puzzle, size, result)

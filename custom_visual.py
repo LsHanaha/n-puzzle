@@ -9,12 +9,8 @@ from typing import List
 WIDTH, HEIGHT = 800, 800
 TILESIZE = 80
 
-BOARD_SIZE = 3
-XMARGIN = (WIDTH - (TILESIZE * BOARD_SIZE)) // 2
-YMARGIN = (HEIGHT - (TILESIZE * BOARD_SIZE)) // 2
-
-
 BLANK = 0
+SPEED_COUNTER = 1
 
 FPSCLOCK = pygame.time.Clock()
 BLACK = (0, 0, 0)
@@ -23,12 +19,18 @@ BRIGHTBLUE = (0, 50, 255)
 DARKTURQUOISE = (3,  54,  73)
 GREEN = (0, 204, 0)
 RED = (144, 0, 0)
-FPS = 30
+FPS = 60
 
 UP = 'u'
 LEFT = 'l'
 RIGHT = 'r'
 DOWN = 'd'
+
+
+def get_left_top_for_tile(tile_y, tile_x):
+    left = XMARGIN + (tile_x * TILESIZE) + tile_x * 4
+    top = YMARGIN + (tile_y * TILESIZE) + tile_y * 4
+    return left, top
 
 
 def make_text(text, text_color, bg_color, top, left):
@@ -48,7 +50,7 @@ def get_blank_position(board):
 
 def slide_animation(screen, board, direction):
 
-    speed = 5
+    speed = 21 * SPEED_COUNTER
     blank_y, blank_x = get_blank_position(board)
 
     if direction == UP:
@@ -69,18 +71,17 @@ def slide_animation(screen, board, direction):
     move_left, move_top = get_left_top_for_tile(move_y, move_x)
     pygame.draw.rect(base_screen, BLACK, (move_left, move_top, TILESIZE, TILESIZE))
 
-    for step in range(0, TILESIZE + 2 * speed, speed):
+    for step in range(0, TILESIZE, speed):
         check_for_quit()
         screen.blit(base_screen, (0, 0))
         if direction == UP:
-            draw_tile(screen, move_y, move_x, board[move_y][move_x], 0, step)
+            draw_tile(screen, move_y, move_x, board[move_y][move_x], 0, step + speed)
         if direction == DOWN:
-            draw_tile(screen, move_y, move_x, board[move_y][move_x], 0, -step)
+            draw_tile(screen, move_y, move_x, board[move_y][move_x], 0, -(step + speed))
         if direction == LEFT:
-            draw_tile(screen, move_y, move_x, board[move_y][move_x], step, 0)
+            draw_tile(screen, move_y, move_x, board[move_y][move_x], (step + speed), 0)
         if direction == RIGHT:
-            draw_tile(screen, move_y, move_x, board[move_y][move_x], -step, 0)
-
+            draw_tile(screen, move_y, move_x, board[move_y][move_x], -(step + speed), 0)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
@@ -102,6 +103,20 @@ def make_move(board, move):
             board[blank_y][blank_x + 1], board[blank_y][blank_x]
 
 
+def draw_tile(screen, tile_y, tile_x, tile_value, adj_x=0, adj_y=0):
+    text_font = pygame.font.Font('freesansbold.ttf', 30)
+    check_for_quit()
+
+    left, top = get_left_top_for_tile(tile_y, tile_x)
+
+    pygame.draw.rect(screen, GREEN, (left + adj_x, top + adj_y, TILESIZE, TILESIZE))
+    text_surf = text_font.render(str(tile_value), True, WHITE)
+    text_rect = text_surf.get_rect()
+    text_rect.center = left + int(TILESIZE / 2) + adj_x, top + int(TILESIZE / 2) + adj_y
+    screen.blit(text_surf, text_rect)
+    pygame.display.update()
+
+
 def solve_puzzle(screen, board, solution):
 
     for move in solution:
@@ -110,24 +125,6 @@ def solve_puzzle(screen, board, solution):
         make_move(board, move)
         time.sleep(0.5)
     return board
-
-
-def get_left_top_for_tile(tile_y, tile_x):
-    left = XMARGIN + (tile_x * TILESIZE) + tile_x * 5
-    top = YMARGIN + (tile_y * TILESIZE) + tile_y * 5
-    return left, top
-
-
-def draw_tile(screen, tile_y, tile_x, tile_value, adj_x=0, adj_y=0):
-    text_font = pygame.font.Font('freesansbold.ttf', 30)
-    check_for_quit()
-
-    left, top = get_left_top_for_tile(tile_y, tile_x)
-    pygame.draw.rect(screen, GREEN, (left + adj_x, top + adj_y, TILESIZE, TILESIZE))
-    text_surf = text_font.render(str(tile_value), True, WHITE)
-    text_rect = text_surf.get_rect()
-    text_rect.center = left + int(TILESIZE / 2) + adj_x, top + int(TILESIZE / 2) + adj_y
-    screen.blit(text_surf, text_rect)
 
 
 def draw_board(screen, board: List[List[int]], message: str = None):
@@ -141,9 +138,9 @@ def draw_board(screen, board: List[List[int]], message: str = None):
                 draw_tile(screen, tile_y, tile_x, board[tile_y][tile_x])
 
     left, top = get_left_top_for_tile(0, 0)
-    width = BOARD_SIZE * TILESIZE + BOARD_SIZE * 5 - 5
-    height = BOARD_SIZE * TILESIZE + BOARD_SIZE * 5 - 5
-    pygame.draw.rect(screen, RED, (left - 5, top - 5, width + 11, height + 11), 4)
+    width = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
+    height = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
+    pygame.draw.rect(screen, RED, (left - 4, top - 4, width + 7, height + 7), 4)
     check_for_quit()
 
 
@@ -183,6 +180,14 @@ def vizual(puzzle: List[int], size: int, solution: str):
     pygame.init()
     font = pygame.font.Font('freesansbold.ttf', 42)
 
+    counter = {2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2}
+
+    global BOARD_SIZE, XMARGIN, YMARGIN, SPEED_COUNTER
+    SPEED_COUNTER = counter[size]
+    BOARD_SIZE = size
+    XMARGIN = (WIDTH - (TILESIZE * BOARD_SIZE)) // 2
+    YMARGIN = (HEIGHT - (TILESIZE * BOARD_SIZE)) // 2
+
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     set_title_and_icon()
     header, header_rect = header_text(font)
@@ -198,15 +203,9 @@ def vizual(puzzle: List[int], size: int, solution: str):
         check_for_quit()
 
         if solve_puzzle(screen, puzzle_vizual, solution):
-            text_surf, text_rect = make_text("DONE!", WHITE, BLACK, HEIGHT // 2, WIDTH // 2)
+            text_surf, text_rect = make_text("Пазл собран!", WHITE, BLACK, HEIGHT // 2, WIDTH // 2)
             screen.blit(text_surf, text_rect)
             pygame.display.update()
-            time.sleep(1)
-            break
+            while True:
+                check_for_quit()
         FPSCLOCK.tick(FPS)
-
-
-if __name__ == '__main__':
-
-    vizual([8, 3, 1, 4, 0, 5, 2, 6, 7], 3, 'lurddruullddruruldlurd')
-
