@@ -12,7 +12,7 @@ def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
     current.h = heuristic(current)
     if not current.h:
         print(f"Total states visited: 0")
-        print(f"Max states in memory 0")
+        print(f"Max states in memory: 0")
         return current
     heappush(opened, current)
     closed = {}
@@ -27,7 +27,7 @@ def a_star(current: Puzzle, heuristic: Callable) -> Optional[Puzzle]:
 
             if not neighbour.h:
                 print(f"Total states visited: {len(closed)}")
-                print(f"Max states in memory {len(closed) + len(opened)}")
+                print(f"Max states in memory: {len(closed) + len(opened)}")
                 return neighbour
 
             if neighbour_id in closed:

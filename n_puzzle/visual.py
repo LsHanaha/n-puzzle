@@ -1,5 +1,7 @@
-import pygame
-from pygame.locals import *
+from n_puzzle.utils import Suppresser
+with Suppresser():
+    import pygame
+    from pygame.locals import *
 
 import os
 import sys
@@ -205,6 +207,7 @@ def vizual(puzzle: List[int], size: int, solution: str):
         pygame.display.update()
         check_for_quit()
 
+        time.sleep(1)
         if solve_puzzle(screen, puzzle_vizual, solution):
             pygame.display.update()
             while True:

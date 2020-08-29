@@ -113,6 +113,9 @@ def read_puzzle(args: argparse.Namespace) -> Tuple[int, List[int], List[int]]:
                   " arguments, choose one.", file=sys.stderr)
             exit(1)
         goal = args.goal
+    if puzzle is None:
+        print("No puzzle has been provided.", file=sys.stderr)
+        exit(1)
     if size is None:
         size = int(sqrt(len(puzzle)))
     if not goal:
