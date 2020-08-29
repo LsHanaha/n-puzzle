@@ -10,6 +10,6 @@ clean:
 fclean: clean
 	xargs rm -rf < $(FILELIST)
 	rm $(FILELIST)
-	python3 -m pip uninstall pygame
+	python3 -m pip uninstall pygame -y
 
 re: fclean all
