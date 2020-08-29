@@ -8,6 +8,7 @@ class HandleResult:
 
     def show_result(self, solution: str, quiet: bool):
         print("Solution: ", solution or "empty")
+        print(f"Moves: {len(solution) or '0'}")
 
         if not quiet and solution:
             print('=' * (self._size * 4))
