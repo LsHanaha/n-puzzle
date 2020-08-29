@@ -2,7 +2,7 @@ from n_puzzle.generators import generate_goal
 from n_puzzle.handle_result import HandleResult
 from n_puzzle.solve_puzzle import Solver
 from puzzle_checker import is_solvable
-import custom_visual
+from n_puzzle import visual
 
 import argparse
 import sys
@@ -136,8 +136,7 @@ if __name__ == "__main__":
     if not is_solvable(puzzle, goal, size):
         print("The puzzle has no solution.")
         exit()
-    custom_visual.BOARD_SIZE = size
     result = Solver(args.he, args.cpp).solve_puzzle(size, puzzle, goal)
     HandleResult(puzzle, size).show_result(result, args.q or args.v)
     if args.v:
-        custom_visual.vizual(puzzle, size, result)
+        visual.vizual(puzzle, size, result)

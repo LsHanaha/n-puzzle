@@ -124,7 +124,7 @@ def solve_puzzle(screen, board, solution):
         check_for_quit()
         slide_animation(screen, board, move)
         make_move(board, move)
-        time.sleep(0.5)
+        time.sleep(0.5 / BOARD_SIZE)
     return board
 
 
@@ -133,15 +133,17 @@ def draw_board(screen, board: List[List[int]], message: str = None):
         text_surf, text_rect = make_text(message, WHITE, DARKTURQUOISE, 5, 5)
         screen.blit(text_surf, text_rect)
 
+    left, top = get_left_top_for_tile(0, 0)
+    width = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
+    height = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
+    pygame.draw.rect(screen, RED, (left - 8, top - 8, width + 15, height + 15), 4)
+
     for tile_y in range(BOARD_SIZE):
         for tile_x in range(BOARD_SIZE):
             if board[tile_y][tile_x]:
                 draw_tile(screen, tile_y, tile_x, board[tile_y][tile_x])
 
-    left, top = get_left_top_for_tile(0, 0)
-    width = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
-    height = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
-    pygame.draw.rect(screen, RED, (left - 8, top - 8, width + 15, height + 15), 4)
+
     check_for_quit()
 
 
