@@ -109,6 +109,7 @@ def draw_tile(screen, tile_y, tile_x, tile_value, adj_x=0, adj_y=0):
 
     left, top = get_left_top_for_tile(tile_y, tile_x)
 
+    pygame.draw.rect(screen, BLACK, (left + adj_x - 4, top + adj_y - 4, TILESIZE + 4, TILESIZE + 4))
     pygame.draw.rect(screen, GREEN, (left + adj_x, top + adj_y, TILESIZE, TILESIZE))
     text_surf = text_font.render(str(tile_value), True, WHITE)
     text_rect = text_surf.get_rect()
@@ -140,7 +141,7 @@ def draw_board(screen, board: List[List[int]], message: str = None):
     left, top = get_left_top_for_tile(0, 0)
     width = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
     height = BOARD_SIZE * TILESIZE + (BOARD_SIZE - 1) * 4
-    pygame.draw.rect(screen, RED, (left - 4, top - 4, width + 7, height + 7), 4)
+    pygame.draw.rect(screen, RED, (left - 8, top - 8, width + 15, height + 15), 4)
     check_for_quit()
 
 
@@ -203,8 +204,6 @@ def vizual(puzzle: List[int], size: int, solution: str):
         check_for_quit()
 
         if solve_puzzle(screen, puzzle_vizual, solution):
-            text_surf, text_rect = make_text("Пазл собран!", WHITE, BLACK, HEIGHT // 2, WIDTH // 2)
-            screen.blit(text_surf, text_rect)
             pygame.display.update()
             while True:
                 check_for_quit()
