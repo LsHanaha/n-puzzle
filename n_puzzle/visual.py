@@ -194,6 +194,7 @@ def vizual(puzzle: List[int], size: int, solution: str):
     YMARGIN = (HEIGHT - (TILESIZE * BOARD_SIZE)) // 2
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    screen.fill(BLACK)
     set_title_and_icon()
     header, header_rect = header_text(font)
     puzzle_vizual = [puzzle[i: i + size] for i in range(0, size * size, size)]
